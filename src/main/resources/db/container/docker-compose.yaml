@@ -1,0 +1,19 @@
+services:
+  member-local-database:
+    platform: linux/x86_64
+    image: mysql:5.7
+    container_name: member-local-database
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: welcome
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./src/main/resources/db/container/database:/docker-entrypoint-initdb.d
+    command:
+      - --default-time-zone=Asia/Seoul
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --character-set-client-handshake=0
+      - --slow-query-log=ON
+      - --long-query-time=2

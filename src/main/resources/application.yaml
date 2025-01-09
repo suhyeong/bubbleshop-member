@@ -1,0 +1,113 @@
+# 기본 환경 세팅
+spring:
+  profiles:
+    active: local
+---
+# profile Group
+spring:
+  profiles:
+    group:
+      "local": common-config, classpath-property
+      "unit-test": common-config, classpath-property
+      "dev": common-config, classpath-property, cloud-property
+      #"stg": common-config, classpath-property, cloud-property
+      "prd": common-config, classpath-property, cloud-property
+---
+#환경별 공통세팅
+spring:
+  application:
+    name: member-project
+  config:
+    activate:
+      on-profile: common-config
+  flyway:
+    enabled: false
+
+logging:
+  level:
+    org.springframework.web.servlet: trace
+    #org.springframework.boot.autoconfigure: debug
+    com.bubbleshop.member.infrastructure.feignclient: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+---
+# 로컬
+spring:
+  config:
+    activate:
+      on-profile: local, default
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: member
+    password: welcome
+    url: jdbc:mysql://localhost:3307/member
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    #clean-on-validation-error: true
+    locations: classpath:db/migration
+
+server:
+  port: 8081
+
+---
+# 유닛 테스트
+spring:
+  config:
+    activate:
+      on-profile: unit-test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: "jdbc:h2:mem:./data/localdb;DB_CLOSE_ON_EXIT=FALSE"
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+---
+# 개발
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username:
+    password:
+    url:
+---
+# 운영
+spring:
+  config:
+    activate:
+      on-profile: prd
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username:
+    password:
+    url:
+---
+# properties 사용을 위한 profile
+spring:
+  config:
+    activate:
+      on-profile: classpath-property
+    import: ""
+---
+# cloud properties 사용을 위한 profile
+spring:
+  config:
+    activate:
+      on-profile: cloud-property
+---
