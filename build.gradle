@@ -24,6 +24,7 @@ ext {
 	openApiVersion = '1.8.0'
 	mapStructVersion = '1.5.5.Final'
 	lombokMapstructBindVersion = '0.2.0'
+	querydslVersion = '5.0.0'
 }
 
 dependencies {
@@ -75,6 +76,13 @@ dependencies {
 	//mysql
 	implementation 'mysql:mysql-connector-java'
 	implementation 'com.h2database:h2'
+
+	//querydsl
+	implementation group: 'com.querydsl', name: 'querydsl-jpa', version: querydslVersion
+	implementation group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion
+	implementation group: 'com.querydsl', name: 'querydsl-core', version: querydslVersion
+	annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: querydslVersion, classifier: 'jpa'
+
 	//flyway
 	implementation "org.flywaydb:flyway-core:${flywayVersion}"
 
