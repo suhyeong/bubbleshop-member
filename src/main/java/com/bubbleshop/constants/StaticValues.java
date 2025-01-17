@@ -11,8 +11,6 @@ public class StaticValues {
 
     public static class RedisKey {
         public static final long REDIS_DEFAULT_EXPIRE_SEC = 600L; // 600초
-        public static final String PRODUCT_KEY = "prd";
-        public static final String CATEGORY_KEY = "cate";
     }
 
     public static class Profiles {

@@ -1,8 +1,14 @@
-package com.bubbleshop.member;
+package com.bubbleshop;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.scheduling.annotation.EnableAsync;
 
+@EnableAsync
+@EnableJpaAuditing
+@EnableCaching
 @SpringBootApplication
 public class MemberApplication {
 
