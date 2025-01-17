@@ -2,7 +2,9 @@ package com.bubbleshop.member.interfaces.rest.controller;
 
 import com.bubbleshop.member.application.internal.queryservice.MemberQueryService;
 import com.bubbleshop.member.domain.command.GetMemberListCommand;
+import com.bubbleshop.member.domain.model.aggregate.Member;
 import com.bubbleshop.member.domain.model.view.MemberListView;
+import com.bubbleshop.member.interfaces.rest.dto.GetMemberDetailRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.GetMemberListRspDTO;
 import com.bubbleshop.member.interfaces.transform.GetMemberListCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,9 +48,10 @@ public class MemberManagementController extends BaseController {
     @Operation(summary = "회원 상세 정보 조회 API", description = "회원 아이디로 회원 상세 정보를 조회한다.")
     @GetMapping(value = MEMBER)
     public ResponseEntity<Object> getMember(@PathVariable String memberId) {
-
+        Member member = memberQueryService.getMember(memberId);
+        GetMemberDetailRspDTO response = getMemberListCommandDTOAssembler.toDTO(member);
         return ResponseEntity.ok()
                 .headers(getSuccessHeaders())
-                .build(); // todo body
+                .body(response);
     }
 }

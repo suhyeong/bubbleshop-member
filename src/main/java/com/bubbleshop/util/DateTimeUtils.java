@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Objects;
 
-import static com.bubbleshop.constants.ResponseCode.NON_EXIST_DATA;
+import static com.bubbleshop.constants.ResponseCode.INVALID_PARAMETER;
 
 public class DateTimeUtils {
     public static final String DATE_FORMAT_YYYY_MM_DD_DOT = "yyyy.MM.dd";
@@ -25,14 +25,14 @@ public class DateTimeUtils {
 
     public static LocalDateTime convertStringToDateTime(String pattern, String dateTime) {
         if(dateTime.isBlank())
-            throw new InvalidDataException(NON_EXIST_DATA);
+            throw new InvalidDataException(INVALID_PARAMETER);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return LocalDateTime.parse(dateTime, formatter);
     }
 
     public static LocalDateTime convertStringToDateTime(String pattern, String dateTime, LocalTime time) {
         if(dateTime.isBlank())
-            throw new InvalidDataException(NON_EXIST_DATA);
+            throw new InvalidDataException(INVALID_PARAMETER);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return LocalDate.parse(dateTime, formatter).atTime(time);
     }

@@ -9,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "member_master")
@@ -59,6 +60,15 @@ public class Member extends TimeEntity implements Serializable {
     @Column(name = "point")
     private int point;
 
+    @Transient
+    private LocalDateTime leftDateToDiscardMemberInfo; // 탈퇴한 회원일 경우 정보 삭제까지 남은 일자
 
-
+    /**
+     * 탈퇴 회원일 경우 정보 삭제까지 남은 기간 계산
+     */
+    public void calcLeftDateToDiscardMemberInfo() {
+        if(Objects.nonNull(this.withdrawalDate)) {
+            // todo
+        }
+    };
 }

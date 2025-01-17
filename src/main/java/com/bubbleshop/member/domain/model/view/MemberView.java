@@ -20,11 +20,6 @@ public class MemberView {
     private String phoneNum;
     private LocalDateTime joinDate;
     private LocalDateTime withdrawalDate;
-//    private LocalDateTime timeToDiscardMemberInfo; // 탈퇴한 회원일 경우 정보 삭제까지 남은 일자
-//    private LocalDateTime birthDate;
-//    private int point;
-//    private String email;
-//    private boolean isEmailReceiveAgree;
 
     @QueryProjection
     public MemberView(Member member) {
