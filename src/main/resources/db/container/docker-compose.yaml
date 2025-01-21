@@ -17,3 +17,16 @@ services:
       - --character-set-client-handshake=0
       - --slow-query-log=ON
       - --long-query-time=2
+  member-local-s3:
+    platform: linux/x86_64
+    image: localstack/localstack
+    ports:
+      - "4567:4566" # LocalStack의 기본 포트
+    environment:
+      - SERVICES=s3
+      - DEBUG=1
+    container_name: member-local-s3
+    restart: always
+    volumes:
+      - "./localstack:/data/localstack/data"
+      - "./localstack-init:/docker-entrypoint-initaws.d" # 초기화 스크립트 디렉터리

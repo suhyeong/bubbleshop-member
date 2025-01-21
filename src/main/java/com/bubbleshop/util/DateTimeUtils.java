@@ -32,7 +32,7 @@ public class DateTimeUtils {
 
     public static LocalDateTime convertStringToDateTime(String pattern, String dateTime, LocalTime time) {
         if(dateTime.isBlank())
-            throw new InvalidDataException(INVALID_PARAMETER);
+            return null;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return LocalDate.parse(dateTime, formatter).atTime(time);
     }

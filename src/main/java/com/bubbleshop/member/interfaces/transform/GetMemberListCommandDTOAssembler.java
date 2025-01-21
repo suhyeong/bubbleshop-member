@@ -4,6 +4,7 @@ import com.bubbleshop.member.domain.command.GetMemberListCommand;
 import com.bubbleshop.member.domain.model.aggregate.Member;
 import com.bubbleshop.member.domain.model.view.MemberListView;
 import com.bubbleshop.member.domain.model.view.MemberView;
+import com.bubbleshop.member.domain.model.view.ReviewView;
 import com.bubbleshop.member.interfaces.rest.dto.GetMemberDetailRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.GetMemberListRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.GetMemberRspDTO;
