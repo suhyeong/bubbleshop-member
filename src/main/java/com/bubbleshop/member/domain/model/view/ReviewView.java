@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 public class ReviewView {
     private String reviewNo;
+    private String memberId;
     private String productCode;
     private String productName;
     private int productScore;
@@ -23,6 +24,7 @@ public class ReviewView {
 
     public ReviewView(Review review) {
         this.reviewNo = review.getReviewNo();
+        this.memberId = review.getMemberId();
         this.productCode = review.getProductCode();
         this.productName = review.getProductName();
         this.productScore = review.getProductScore();

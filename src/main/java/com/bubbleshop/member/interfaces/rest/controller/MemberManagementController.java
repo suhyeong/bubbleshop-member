@@ -35,8 +35,8 @@ public class MemberManagementController extends BaseController {
                                                  @RequestParam(required = false) String memberId,
                                                  @RequestParam(required = false) String memberNickname,
                                                  @RequestParam(required = false, defaultValue = "false") boolean isMemberNicknameContains,
-                                                 @RequestParam String joinStartDate,
-                                                 @RequestParam String joinEndDate) {
+                                                 @RequestParam(required = false, defaultValue = "") String joinStartDate,
+                                                 @RequestParam(required = false, defaultValue = "") String joinEndDate) {
         GetMemberListCommand command = getMemberListCommandDTOAssembler.toCommand(page, size, memberId, memberNickname, isMemberNicknameContains, joinStartDate, joinEndDate);
         MemberListView view = memberQueryService.getMemberList(command);
         GetMemberListRspDTO response = getMemberListCommandDTOAssembler.toDTO(view);

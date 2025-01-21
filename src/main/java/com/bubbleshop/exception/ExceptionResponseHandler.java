@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -66,6 +67,14 @@ public class ExceptionResponseHandler extends ResponseEntityExceptionHandler {
                 .responseMessage(message.get()).build();
 
         return new ResponseEntity<>(responseDto, getErrorHeader(responseCode, message.get()), responseCode.getStatus());
+    }
+
+    @Override
+    @NonNull
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(
+            MissingServletRequestParameterException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
+        String message = StringUtils.isNotBlank(ex.getMessage()) ? ex.getMessage() : ResponseCode.INVALID_PARAMETER.getMessage();
+        return ResponseEntity.badRequest().headers(getErrorHeader(ResponseCode.INVALID_PARAMETER, message)).build();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
