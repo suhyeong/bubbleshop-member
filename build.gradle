@@ -88,6 +88,12 @@ dependencies {
 
 	//open api
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: openApiVersion
+
+	//open feign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
+
+	testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
 }
 
 dependencyManagement {

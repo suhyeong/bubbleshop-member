@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.bubbleshop.member.domain.model.aggregate.QMember.member;
 
@@ -53,6 +54,10 @@ public class MemberCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 booleanBuilder.and(member.nickname.contains(command.getMemberNickname()));
             else
                 booleanBuilder.and(member.nickname.eq(command.getMemberNickname()));
+        }
+
+        if(Objects.nonNull(command.getJoinStartDate()) && Objects.nonNull(command.getJoinEndDate())) {
+            booleanBuilder.and(member.joinDate.between(command.getJoinStartDate(), command.getJoinEndDate()));
         }
 
         return booleanBuilder;

@@ -1,14 +1,14 @@
 package com.bubbleshop.member.interfaces.rest.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
 @ToString
 public class GetMemberRspDTO implements Serializable {

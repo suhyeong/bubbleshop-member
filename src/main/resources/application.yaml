@@ -57,6 +57,18 @@ spring:
 server:
   port: 8081
 
+host:
+  product: localhost:8080
+
+cloud:
+  aws:
+    s3:
+      host: http://localhost:4566
+      access_key: member
+      secret_key: welcome
+      region: ap-east-1
+      bucket-name: member
+
 ---
 # 유닛 테스트
 spring:
