@@ -15,6 +15,7 @@ public class GetReviewRspDTO implements Serializable {
     private static final long serialVersionUID = -6558142046357355960L;
 
     private String reviewNo;
+    private String memberId;
     private String productCode;
     private String productName;
     private int productScore;
