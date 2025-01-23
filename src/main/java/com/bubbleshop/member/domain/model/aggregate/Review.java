@@ -1,8 +1,8 @@
 package com.bubbleshop.member.domain.model.aggregate;
 
+import com.bubbleshop.member.domain.model.converter.YOrNToBooleanConverter;
 import com.bubbleshop.member.domain.model.entity.ReviewImage;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
-import com.bubbleshop.member.domain.model.view.ProductView;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jdk.jfr.Description;
 import lombok.*;
@@ -12,7 +12,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name = "review_master")
@@ -38,9 +37,6 @@ public class Review extends TimeEntity implements Serializable {
     @Column(name = "prd_code")
     private String productCode;
 
-    @Transient
-    private String productName; // 상품명
-
     @Description("상품 점수")
     @Column(name = "prd_score")
     private int productScore;
@@ -49,17 +45,17 @@ public class Review extends TimeEntity implements Serializable {
     @Column(name = "rvw_cont")
     private String reviewContents;
 
+    @Description("리뷰 공개 여부")
+    @Column(name = "rvw_show_yn")
+    @Convert(converter = YOrNToBooleanConverter.class)
+    private boolean isShow;
+
+    @Description("포인트 지급 여부")
+    @Column(name = "point_pay_yn")
+    @Convert(converter = YOrNToBooleanConverter.class)
+    private boolean isPayedPoint;
+
     @OneToMany(mappedBy = "review", targetEntity = ReviewImage.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"review"})
     private List<ReviewImage> images = new ArrayList<>();
-
-    /**
-     * 상품명 정보 세팅
-     * @param productView
-     */
-    public void applyProductNameInfo(ProductView productView) {
-        if(Objects.nonNull(productView)) {
-            this.productName = productView.getProductName();
-        }
-    }
 }

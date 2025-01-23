@@ -23,7 +23,7 @@ public class ReviewImage extends TimeEntity implements Serializable {
     private ReviewImageId reviewImageId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "review_no", insertable = false, updatable = false)
+    @JoinColumn(name = "rvw_no", insertable = false, updatable = false)
     @ToString.Exclude
     private Review review;
 

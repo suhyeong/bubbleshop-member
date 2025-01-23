@@ -1,6 +1,10 @@
 package com.bubbleshop.member.interfaces.rest.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -8,7 +12,7 @@ import java.io.Serializable;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString
 public class GetReviewRspDTO implements Serializable {
     @Serial
@@ -16,10 +20,12 @@ public class GetReviewRspDTO implements Serializable {
 
     private String reviewNo;
     private String memberId;
+    private String memberName;
     private String productCode;
     private String productName;
     private int productScore;
     private String reviewContent;
     private String createdDate;
-    // TODO 리뷰 공개 여부, 포인트 지급 여부 정보 추가
+    private Boolean isReviewShow;
+    private Boolean isPayedPoint;
 }
