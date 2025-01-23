@@ -60,6 +60,11 @@ server:
 host:
   product: localhost:8080
 
+image:
+  url:
+    review: https://localhost.localstack.cloud:4566/review
+    member: https://localhost.localstack.cloud:4566/member
+
 cloud:
   aws:
     s3:

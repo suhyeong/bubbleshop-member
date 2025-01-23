@@ -42,6 +42,10 @@ public abstract class GetReviewListCommandDTOAssembler {
     public abstract GetReviewListRspDTO toDTO(ReviewListView reviewListView);
 
     @Named("GetReviewDetailRspDTO.ReviewRspDTO")
-    @Mapping(target = "createdDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, reviewView.getCreatedDate()) )")
+    @Mappings({
+            @Mapping(target = "createdDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, reviewView.getCreatedDate()) )"),
+            @Mapping(target = "isReviewShow", source = "reviewShow"),
+            @Mapping(target = "isPayedPoint", source = "payedPoint")
+    })
     public abstract GetReviewRspDTO toReviewDTO(ReviewView reviewView);
 }

@@ -1,7 +1,6 @@
 package com.bubbleshop.member.infrastructure.jpa;
 
 import com.bubbleshop.member.domain.command.GetReviewListCommand;
-import com.bubbleshop.member.domain.model.aggregate.Review;
 import com.bubbleshop.member.domain.model.view.ReviewView;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
@@ -12,6 +11,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.util.List;
 import java.util.Objects;
 
+import static com.bubbleshop.member.domain.model.aggregate.QMember.member;
 import static com.bubbleshop.member.domain.model.aggregate.QReview.review;
 
 
@@ -33,10 +33,11 @@ public class ReviewCustomRepositoryImpl extends QuerydslRepositorySupport implem
     }
 
     @Override
-    public List<Review> findReviewListWithPagination(GetReviewListCommand command) {
+    public List<ReviewView> findReviewListWithPagination(GetReviewListCommand command) {
         return jpaQueryFactory
-                .selectFrom(review)
-                .where(this.conditionReviewList(command))
+                .select(Projections.constructor(ReviewView.class, review, member))
+                .from(review, member)
+                .where(this.conditionReviewList(command).and(member.id.eq(review.memberId)))
                 .limit(command.getPageable().getPageSize())
                 .offset(command.getPageable().getOffset())
                 .fetch();
