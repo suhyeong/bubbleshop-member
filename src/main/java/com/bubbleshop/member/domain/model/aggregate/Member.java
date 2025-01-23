@@ -1,12 +1,12 @@
 package com.bubbleshop.member.domain.model.aggregate;
 
-import com.bubbleshop.member.domain.model.converter.YOrNToBooleanConverter;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import com.bubbleshop.member.domain.model.valueobject.MemberEmailInfo;
 import jdk.jfr.Description;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -19,6 +19,9 @@ import java.util.Objects;
 @Getter
 @Builder
 public class Member extends TimeEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 7976024044942500205L;
+
     @Id
     @Description("회원 아이디")
     @Column(name = "member_id")
@@ -70,5 +73,5 @@ public class Member extends TimeEntity implements Serializable {
         if(Objects.nonNull(this.withdrawalDate)) {
             // todo
         }
-    };
+    }
 }
