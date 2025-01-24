@@ -27,5 +27,6 @@ public abstract class GetReviewDetailCommandDTOAssembler {
 
     @Named("GetReviewDetailRspDTO.CommentRspDTO")
     @Mapping(target = "createdDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, commentView.getCreatedDate()) )")
+    @Mapping(target = "modifiedDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, commentView.getModifiedDate()) )")
     public abstract GetReviewDetailRspDTO.ReviewCommentDTO toCommentDTO(CommentView commentView);
 }
