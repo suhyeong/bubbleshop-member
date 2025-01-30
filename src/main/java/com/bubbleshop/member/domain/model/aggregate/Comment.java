@@ -28,11 +28,11 @@ public class Comment extends TimeEntity implements Serializable {
     private String commentNo;
 
     @Description("코멘트 타입")
-    @Column(name = "cmnt_type")
+    @Column(name = "cmnt_type", updatable = false)
     private String commentType;
 
     @Description("타겟 번호")
-    @Column(name = "target_no")
+    @Column(name = "target_no", updatable = false)
     private String targetNo; // reviewNo or qnaNo
 
     @Description("코멘트 내용")
@@ -43,4 +43,7 @@ public class Comment extends TimeEntity implements Serializable {
     @Column(name = "crt_by")
     private String createdBy;
 
+    public void updateContent(String content) {
+        this.commentContent = content;
+    }
 }
