@@ -42,6 +42,7 @@ public class GetReviewDetailRspDTO extends GetReviewRspDTO {
         private String commentNo;
         private String content;
         private String createdDate;
+        private String modifiedDate;
         private String createdBy;
     }
 }

@@ -16,12 +16,14 @@ public class CommentView {
     private String commentNo;
     private String content;
     private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
     private String createdBy; // 작성자
 
     public CommentView(Comment comment) {
         this.commentNo = comment.getCommentNo();
         this.content = comment.getCommentContent();
         this.createdDate = comment.getCreatedDate();
+        this.modifiedDate = comment.getModifiedDate();
         this.createdBy = comment.getCreatedBy();
     }
 }
