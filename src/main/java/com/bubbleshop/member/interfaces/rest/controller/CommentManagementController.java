@@ -1,10 +1,11 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
 import com.bubbleshop.member.application.internal.commandservice.CommentCommandService;
+import com.bubbleshop.member.domain.command.UpdateCommentCommand;
 import com.bubbleshop.member.domain.model.aggregate.Comment;
-import com.bubbleshop.member.interfaces.rest.dto.UpdateCommentContentReqDTO;
-import com.bubbleshop.member.interfaces.rest.dto.UpdateCommentContentRspDTO;
-import com.bubbleshop.member.interfaces.transform.UpdateCommentContentDTOAssembler;
+import com.bubbleshop.member.interfaces.rest.dto.UpdateCommentReqDTO;
+import com.bubbleshop.member.interfaces.rest.dto.UpdateCommentRspDTO;
+import com.bubbleshop.member.interfaces.transform.UpdateCommentCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -24,14 +25,15 @@ import static com.bubbleshop.member.interfaces.rest.controller.CommentUrl.COMMEN
 public class CommentManagementController extends BaseController {
     private final CommentCommandService commentCommandService;
 
-    private final UpdateCommentContentDTOAssembler updateCommentContentDTOAssembler;
+    private final UpdateCommentCommandDTOAssembler updateCommentCommandDTOAssembler;
 
     @Operation(summary = "코멘트 (댓글) 수정 API", description = "코멘트 번호로 코멘트 내용을 수정한다.")
     @PatchMapping(value = COMMENT)
     public ResponseEntity<Object> updateCommentContents(@PathVariable String commentNo,
-                                                      @RequestBody UpdateCommentContentReqDTO request) {
-        Comment comment = commentCommandService.updateCommentContents(commentNo, request.getContent());
-        UpdateCommentContentRspDTO response = updateCommentContentDTOAssembler.toDTO(comment);
+                                                      @RequestBody UpdateCommentReqDTO request) {
+        UpdateCommentCommand command = updateCommentCommandDTOAssembler.toCommand(commentNo, request);
+        Comment comment = commentCommandService.updateCommentInfo(command);
+        UpdateCommentRspDTO response = updateCommentCommandDTOAssembler.toDTO(comment);
         return ResponseEntity.ok()
                 .headers(getSuccessHeaders())
                 .body(response);
