@@ -30,11 +30,11 @@ public class Review extends TimeEntity implements Serializable {
     private String reviewNo;
 
     @Description("회원 아이디")
-    @Column(name = "member_id")
+    @Column(name = "member_id", updatable = false)
     private String memberId;
 
     @Description("상품 코드")
-    @Column(name = "prd_code")
+    @Column(name = "prd_code", updatable = false)
     private String productCode;
 
     @Description("상품 점수")
@@ -58,4 +58,8 @@ public class Review extends TimeEntity implements Serializable {
     @OneToMany(mappedBy = "review", targetEntity = ReviewImage.class, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties({"review"})
     private List<ReviewImage> images = new ArrayList<>();
+
+    public void updateReviewShowYn(boolean isShow) {
+        this.isShow = isShow;
+    }
 }

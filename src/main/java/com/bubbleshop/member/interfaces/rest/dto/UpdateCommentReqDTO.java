@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @ToString
-public class UpdateCommentContentReqDTO implements Serializable {
+public class UpdateCommentReqDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 6119470824024131410L;
 
