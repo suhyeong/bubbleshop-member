@@ -12,8 +12,7 @@ public enum ResponseCode {
     DB_ERROR("00", "98", "DB 접속시 에러가 발생하였습니다. 다시 시도해주세요.", HttpStatus.INTERNAL_SERVER_ERROR),
     SERVER_ERROR("00", "99", "에러가 발생하였습니다. 다시 시도해주세요.", HttpStatus.INTERNAL_SERVER_ERROR),
 
-    INVALID_OPTION_TYPE("01", "01", "유효하지 않은 옵션 타입입니다.", HttpStatus.BAD_REQUEST),
-    INVALID_CATEGORY_TYPE("01", "02", "유효하지 않은 카테고리 타입입니다.", HttpStatus.BAD_REQUEST),
+    INVALID_TYPE("01", "01", "유효하지 않은 타입입니다.", HttpStatus.BAD_REQUEST),
 
     S3_PUT_DATA_ERROR("05", "01", "파일 업로드시 에러가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     S3_COPY_DATA_ERROR("05","02", "파일 복제시 에러가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),

@@ -2,6 +2,7 @@ package com.bubbleshop.member.domain.service;
 
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.exception.ApiException;
+import com.bubbleshop.member.domain.constant.CommentType;
 import com.bubbleshop.member.domain.model.aggregate.Comment;
 import com.bubbleshop.member.domain.model.aggregate.Member;
 import com.bubbleshop.member.domain.model.aggregate.Review;
@@ -44,7 +45,7 @@ public class GetReviewService {
         // 2. 리뷰의 상품 정보 조회
         Map<String, ProductView> productInfo = productRepository.getProductList(List.of(review.getProductCode()));
         // 3. 리뷰의 댓글 리스트 조회
-        List<Comment> comments = commentRepository.findCommentsByTargetNoAndCommentType(review.getReviewNo(), "R");
+        List<Comment> comments = commentRepository.findCommentsByTargetNoAndCommentType(review.getReviewNo(), CommentType.REVIEW);
         return new ReviewView(review, member, productInfo.get(review.getProductCode()), comments, imageUrl);
     }
 }
