@@ -32,17 +32,10 @@ public class GetReviewDetailRspDTO extends GetReviewRspDTO {
     }
 
     @Getter
-    @Builder
-    @ToString
-    public static class ReviewCommentDTO implements Serializable {
-
+    @SuperBuilder
+    @ToString(callSuper = true)
+    public static class ReviewCommentDTO extends CreateCommentRspDTO {
         @Serial
         private static final long serialVersionUID = 3788399214499034118L;
-
-        private String commentNo;
-        private String content;
-        private String createdDate;
-        private String modifiedDate;
-        private String createdBy;
     }
 }

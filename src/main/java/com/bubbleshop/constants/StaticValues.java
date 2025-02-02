@@ -9,6 +9,12 @@ public class StaticValues {
     public static final String COMMON_Y = "Y";
     public static final String COMMON_N = "N";
 
+    public static final String ADMIN = "admin"; // TODO
+
+    public static class Prefix {
+        public static final String COMMENT_NO_PREFIX = "C";
+    }
+
     public static class RedisKey {
         public static final long REDIS_DEFAULT_EXPIRE_SEC = 600L; // 600초
     }
