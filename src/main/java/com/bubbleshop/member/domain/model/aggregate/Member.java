@@ -29,7 +29,7 @@ public class Member extends TimeEntity implements Serializable {
 
     @Description("비밀번호")
     @Column(name = "passwd") // todo 암호화
-    private String passwd;
+    private String password;
 
     @Description("회원명")
     @Column(name = "member_name")
