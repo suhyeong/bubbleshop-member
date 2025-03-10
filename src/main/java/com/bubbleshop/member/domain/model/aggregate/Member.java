@@ -1,15 +1,22 @@
 package com.bubbleshop.member.domain.model.aggregate;
 
+import com.bubbleshop.member.domain.model.entity.MemberAuthority;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import com.bubbleshop.member.domain.model.valueobject.MemberEmailInfo;
 import jdk.jfr.Description;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "member_master")
@@ -18,7 +25,7 @@ import java.util.Objects;
 @ToString
 @Getter
 @Builder
-public class Member extends TimeEntity implements Serializable {
+public class Member extends TimeEntity implements UserDetails {
     @Serial
     private static final long serialVersionUID = 7976024044942500205L;
 
@@ -28,7 +35,7 @@ public class Member extends TimeEntity implements Serializable {
     private String id;
 
     @Description("비밀번호")
-    @Column(name = "passwd") // todo 암호화
+    @Column(name = "passwd", nullable = false)
     private String password;
 
     @Description("회원명")
@@ -40,7 +47,7 @@ public class Member extends TimeEntity implements Serializable {
     private String nickname;
 
     @Description("전화번호")
-    @Column(name = "phone_num") // todo 암호화
+    @Column(name = "phone_num", unique = true) // todo 암호화
     private String phoneNum;
 
     @Description("가입 일시")
@@ -63,6 +70,9 @@ public class Member extends TimeEntity implements Serializable {
     @Column(name = "point")
     private int point;
 
+    @OneToMany(mappedBy = "member", targetEntity = MemberAuthority.class, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MemberAuthority> authorities = new ArrayList<>(); //회원 권한
+
     @Transient
     private LocalDateTime leftDateToDiscardMemberInfo; // 탈퇴한 회원일 경우 정보 삭제까지 남은 일자
 
@@ -73,5 +83,35 @@ public class Member extends TimeEntity implements Serializable {
         if(Objects.nonNull(this.withdrawalDate)) {
             // todo
         }
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.authorities.stream().map(item -> new SimpleGrantedAuthority(item.getAuthority().getRole())).collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return this.id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
