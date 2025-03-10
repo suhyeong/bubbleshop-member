@@ -29,7 +29,7 @@ import static com.bubbleshop.util.DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_
 @Getter
 @ToString
 @Builder
-public class Comment extends TimeEntity implements Serializable {
+public class Comment extends TimeEntity {
     @Serial
     private static final long serialVersionUID = -3643508812901384196L;
 

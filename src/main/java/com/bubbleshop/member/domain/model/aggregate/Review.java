@@ -20,7 +20,7 @@ import java.util.List;
 @ToString
 @Getter
 @Builder
-public class Review extends TimeEntity implements Serializable {
+public class Review extends TimeEntity {
     @Serial
     private static final long serialVersionUID = -6815492060945574091L;
 

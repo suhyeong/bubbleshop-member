@@ -10,12 +10,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.Column;
 import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class TimeEntity {
+public abstract class TimeEntity implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -3794716837731233718L;
+
     @Description("생성 일시")
     @Column(name = "crt_dt", updatable = false)
     @CreatedDate
