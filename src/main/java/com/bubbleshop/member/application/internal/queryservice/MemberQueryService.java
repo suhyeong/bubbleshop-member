@@ -9,6 +9,7 @@ import com.bubbleshop.member.domain.model.view.MemberView;
 import com.bubbleshop.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,5 +32,9 @@ public class MemberQueryService {
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ApiException(ResponseCode.NON_EXIST_DATA));
         member.calcLeftDateToDiscardMemberInfo();
         return member;
+    }
+
+    public UserDetails getUserDetails(String memberId) {
+        return memberRepository.findById(memberId).orElseThrow(() -> new ApiException(ResponseCode.NON_EXIST_DATA));
     }
 }

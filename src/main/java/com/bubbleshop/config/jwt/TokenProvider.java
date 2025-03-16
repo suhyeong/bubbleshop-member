@@ -1,8 +1,14 @@
 package com.bubbleshop.config.jwt;
 
 import com.bubbleshop.constants.StaticValues;
-import io.jsonwebtoken.*;
+import com.bubbleshop.member.application.internal.queryservice.MemberQueryService;
+import com.bubbleshop.member.domain.model.aggregate.Member;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,8 +30,11 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TokenProvider {
     private SecretKey secretKey;
 
@@ -35,6 +44,8 @@ public class TokenProvider {
     private String accessTokenExpirationTime;
     @Value("${jwt.refresh-expiration-time}")
     private String refreshTokenExpirationTime;
+
+    private final MemberQueryService memberQueryService;
 
     @PostConstruct
     protected void init() {
@@ -51,7 +62,7 @@ public class TokenProvider {
 
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
-                .claim("role", authorities)
+                .claim(StaticValues.Token.CLAIM_ROLE_KEY, authorities)
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .setExpiration(new Date(now.getTime() + Long.parseLong(this.accessTokenExpirationTime)))
                 .compact();
@@ -59,6 +70,25 @@ public class TokenProvider {
         String refreshToken = Jwts.builder()
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .setExpiration(new Date(now.getTime() + Long.parseLong(this.refreshTokenExpirationTime)))
+                .compact();
+
+        return TokenView.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    }
+
+    public TokenView createToken(Member member) {
+        Date now = new Date();
+
+        String accessToken = Jwts.builder()
+                .setSubject(member.getId())
+                .claim(StaticValues.Token.CLAIM_ROLE_KEY, member.getAuthorities())
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + Long.parseLong(this.accessTokenExpirationTime)))
+                .signWith(this.secretKey, SignatureAlgorithm.HS512)
+                .compact();
+
+        String refreshToken = Jwts.builder()
+                .setExpiration(new Date(now.getTime() + Long.parseLong(this.refreshTokenExpirationTime)))
+                .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
 
         return TokenView.builder().accessToken(accessToken).refreshToken(refreshToken).build();
@@ -74,8 +104,7 @@ public class TokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(this.secretKey).build().parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
+            return !this.getClaims(token).getExpiration().before(new Date());
         } catch (SecurityException | MalformedJwtException e) {
             e.printStackTrace();
             log.error("TokenProvider validateToken Error ! ", e);
@@ -84,20 +113,20 @@ public class TokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(this.secretKey)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims =  this.getClaims(token);
 
         Object authoritiesClaim = claims.get(StaticValues.Token.CLAIM_ROLE_KEY);
 
         Collection<? extends GrantedAuthority> authorities = Objects.isNull(authoritiesClaim) ?
                 AuthorityUtils.NO_AUTHORITIES : AuthorityUtils.commaSeparatedStringToAuthorityList(authoritiesClaim.toString());
 
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
+        //UserDetails principal = new User(claims.getSubject(), "", authorities);
+        UserDetails principal = memberQueryService.getUserDetails(claims.getSubject());
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        return new UsernamePasswordAuthenticationToken(principal, EMPTY, authorities);
     }
 
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder().setSigningKey(this.secretKey).build().parseClaimsJws(token).getBody();
+    }
 }

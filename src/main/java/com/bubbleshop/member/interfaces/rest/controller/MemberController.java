@@ -1,7 +1,9 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
+import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
 import com.bubbleshop.member.interfaces.rest.dto.LoginMemberReqDTO;
+import com.bubbleshop.member.interfaces.rest.dto.LoginMemberRspDTO;
 import com.bubbleshop.member.interfaces.transform.LoginMemberCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -34,8 +36,9 @@ public class MemberController extends BaseController {
 
     @Operation(summary = "회원 로그인 API", description = "로그인을 수행한다.")
     @PostMapping(value = MEMBER)
-    public ResponseEntity<Void> loginMember(@PathVariable String memberId, @RequestBody LoginMemberReqDTO loginMemberReqDTO) {
-        memberCommandService.login(loginMemberCommandDTOAssembler.toCommand(memberId, loginMemberReqDTO));
-        return ResponseEntity.ok().headers(getSuccessHeaders()).build();
+    public ResponseEntity<LoginMemberRspDTO> loginMember(@PathVariable String memberId, @RequestBody LoginMemberReqDTO loginMemberReqDTO) {
+        String accessToken = memberCommandService.login(loginMemberCommandDTOAssembler.toCommand(memberId, loginMemberReqDTO));
+        LoginMemberRspDTO response = loginMemberCommandDTOAssembler.toDTO(accessToken);
+        return ResponseEntity.ok().headers(getSuccessHeaders()).body(response);
     }
 }
