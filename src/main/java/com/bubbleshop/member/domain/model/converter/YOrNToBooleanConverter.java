@@ -3,13 +3,14 @@ package com.bubbleshop.member.domain.model.converter;
 
 import com.bubbleshop.constants.StaticValues;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
+import org.springframework.util.ObjectUtils;
 
 public class YOrNToBooleanConverter implements AttributeConverter<Boolean, String> {
 
     @Override
     public String convertToDatabaseColumn(Boolean attribute) {
-        return attribute ? StaticValues.COMMON_Y : StaticValues.COMMON_N;
+        return !ObjectUtils.isEmpty(attribute) && attribute ? StaticValues.COMMON_Y : StaticValues.COMMON_N;
     }
 
     @Override

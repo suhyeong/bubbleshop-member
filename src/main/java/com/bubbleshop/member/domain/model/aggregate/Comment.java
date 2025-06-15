@@ -6,16 +6,14 @@ import com.bubbleshop.member.domain.constant.CommentType;
 import com.bubbleshop.member.domain.constant.HistoryType;
 import com.bubbleshop.member.domain.model.converter.CommentTypeConverter;
 import com.bubbleshop.member.domain.model.entity.CommentHistory;
-import com.bubbleshop.member.domain.model.entity.ReviewImage;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import com.bubbleshop.util.DateTimeUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
 import jdk.jfr.Description;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serial;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

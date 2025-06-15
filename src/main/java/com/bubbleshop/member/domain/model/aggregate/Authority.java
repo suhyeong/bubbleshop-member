@@ -3,7 +3,7 @@ package com.bubbleshop.member.domain.model.aggregate;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serial;
 
 @Entity

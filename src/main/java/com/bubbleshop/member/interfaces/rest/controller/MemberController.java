@@ -1,6 +1,5 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
-import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
 import com.bubbleshop.member.interfaces.rest.dto.LoginMemberReqDTO;
 import com.bubbleshop.member.interfaces.rest.dto.LoginMemberRspDTO;

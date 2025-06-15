@@ -1,12 +1,11 @@
 package com.bubbleshop.member.domain.model.entity;
 
 import com.bubbleshop.member.domain.model.aggregate.Review;
+import jakarta.persistence.*;
 import jdk.jfr.Description;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serial;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "review_img_mng")

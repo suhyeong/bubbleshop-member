@@ -8,6 +8,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,11 +31,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .httpBasic().disable()
-                .csrf().disable()
-                .formLogin().disable()
-                .logout().disable()
-                .cors(c -> {
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(CsrfConfigurer::disable)
+                .formLogin(FormLoginConfigurer::disable)
+                .logout(LogoutConfigurer::disable)
+                .cors(cors -> {
                     CorsConfigurationSource source = request -> {
                         CorsConfiguration config = new CorsConfiguration();
                         config.setAllowedOrigins(List.of("*"));
@@ -40,14 +44,13 @@ public class SecurityConfig {
 
                         return config;
                     };
-                    c.configurationSource(source);
+                    cors.configurationSource(source);
                 })
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 생성 및 사용 X
-                .and()
-                .authorizeRequests()
-                .mvcMatchers(HttpMethod.POST, "/member/v1/members", "/member/v1/members/**").permitAll() //회원가입, 로그인은 전체 허용
-                .anyRequest().authenticated() // 그 외의 요청은 모두 인증 필요
-                .and()
+                .sessionManagement(session -> {
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 생성 및 사용 X
+                })
+                .authorizeHttpRequests(auth ->
+                        auth.requestMatchers(HttpMethod.POST, "/member/v1/members", "/member/v1/members/**").permitAll())
                 .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class) // jwt 인증 필터 적용
                 .build();
     }

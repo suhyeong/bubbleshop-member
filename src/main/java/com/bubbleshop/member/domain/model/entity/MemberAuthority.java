@@ -4,7 +4,7 @@ import com.bubbleshop.member.domain.model.aggregate.Authority;
 import com.bubbleshop.member.domain.model.aggregate.Member;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serial;
 
 @Entity

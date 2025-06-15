@@ -14,7 +14,6 @@ import java.util.Objects;
 import static com.bubbleshop.member.domain.model.aggregate.QMember.member;
 import static com.bubbleshop.member.domain.model.aggregate.QReview.review;
 
-
 public class ReviewCustomRepositoryImpl extends QuerydslRepositorySupport implements ReviewCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
