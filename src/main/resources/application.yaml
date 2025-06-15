@@ -60,6 +60,11 @@ server:
 host:
   product: localhost:8080
 
+jwt:
+  secret-key: GfXz4pl0WLO/4Dd9OuqUplp7Gogiz6sGMAvU616OFaflZ83xiE2lYnwrGRPd5N5G # TODO AWS secret manager
+  expiration-time: 3600000 # 1시간: 1 * 60 * 60 * 1000 = 3600000
+  refresh-expiration-time: 10800000 # 3시간: 3 * 60 * 60 * 1000 = 3600000
+
 image:
   url:
     review: https://localhost.localstack.cloud:4566/review

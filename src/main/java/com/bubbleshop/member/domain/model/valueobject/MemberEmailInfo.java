@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Embeddable;
+import java.io.Serial;
 import java.io.Serializable;
 
 @Getter
@@ -18,8 +19,11 @@ import java.io.Serializable;
 @Builder
 @Embeddable
 public class MemberEmailInfo implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -1747188241110312153L;
+
     @Description("이메일")
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Description("이메일 수신 동의 여부")

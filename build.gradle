@@ -25,6 +25,7 @@ ext {
 	mapStructVersion = '1.5.5.Final'
 	lombokMapstructBindVersion = '0.2.0'
 	querydslVersion = '5.0.0'
+	jwtVersion = '0.11.5'
 }
 
 dependencies {
@@ -94,6 +95,15 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
 	testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock'
+
+	// spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// jwt
+	implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
+	implementation "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
+	implementation "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
 }
 
 dependencyManagement {

@@ -30,4 +30,12 @@ public class StaticValues {
         public static final String DELETE = "DELETE";
         public static final String ADD = "NEW";
     }
+
+    public static class Token {
+        public static final String AUTHORIZATION_HEADER = "Authorization";
+        public static final String BEARER_HEADER = "Bearer ";
+        public static final String CLAIM_ROLE_KEY = "role";
+        public static final String ADMIN_ROLE = "admin";
+        public static final String MEMBER_ROLE = "member";
+    }
 }

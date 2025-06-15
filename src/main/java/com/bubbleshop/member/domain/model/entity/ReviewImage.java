@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 @Builder
-public class ReviewImage extends TimeEntity implements Serializable {
+public class ReviewImage extends TimeEntity {
     @Serial
     private static final long serialVersionUID = -3459536913566066567L;
 

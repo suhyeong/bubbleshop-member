@@ -20,7 +20,7 @@ import java.io.Serializable;
 @Getter
 @ToString
 @Builder
-public class CommentHistory extends TimeEntity implements Serializable {
+public class CommentHistory extends TimeEntity {
     @Serial
     private static final long serialVersionUID = 6213941887040648392L;
 
