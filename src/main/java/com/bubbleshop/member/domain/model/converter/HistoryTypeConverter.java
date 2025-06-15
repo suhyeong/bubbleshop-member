@@ -2,7 +2,7 @@ package com.bubbleshop.member.domain.model.converter;
 
 import com.bubbleshop.member.domain.constant.HistoryType;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class HistoryTypeConverter implements AttributeConverter<HistoryType, String> {
     @Override

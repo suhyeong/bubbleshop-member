@@ -13,7 +13,6 @@ import java.util.Objects;
 
 import static com.bubbleshop.member.domain.model.aggregate.QMember.member;
 
-
 public class MemberCustomRepositoryImpl extends QuerydslRepositorySupport implements MemberCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 

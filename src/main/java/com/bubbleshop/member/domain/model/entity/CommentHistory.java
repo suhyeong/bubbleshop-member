@@ -3,15 +3,13 @@ package com.bubbleshop.member.domain.model.entity;
 import com.bubbleshop.member.domain.constant.CommentType;
 import com.bubbleshop.member.domain.constant.HistoryType;
 import com.bubbleshop.member.domain.model.aggregate.Comment;
-import com.bubbleshop.member.domain.model.aggregate.Review;
 import com.bubbleshop.member.domain.model.converter.CommentTypeConverter;
 import com.bubbleshop.member.domain.model.converter.HistoryTypeConverter;
+import jakarta.persistence.*;
 import jdk.jfr.Description;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serial;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "comment_history")
