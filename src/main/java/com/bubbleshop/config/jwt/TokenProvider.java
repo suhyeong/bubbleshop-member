@@ -1,14 +1,11 @@
 package com.bubbleshop.config.jwt;
 
 import com.bubbleshop.constants.StaticValues;
-import com.bubbleshop.member.application.internal.queryservice.MemberQueryService;
 import com.bubbleshop.member.domain.model.aggregate.Member;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,19 +14,18 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.util.ObjectUtils;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static com.bubbleshop.constants.StaticValues.Token.GUEST_ROLE;
+import static com.bubbleshop.constants.StaticValues.Token.MEMBER_ROLE;
 
 @Slf4j
 @Component
@@ -40,11 +36,9 @@ public class TokenProvider {
     @Value("${jwt.secret-key}")
     private String secretKeyValue;
     @Value("${jwt.expiration-time}")
-    private String accessTokenExpirationTime;
+    private Long accessTokenExpirationTime;
     @Value("${jwt.refresh-expiration-time}")
-    private String refreshTokenExpirationTime;
-
-    private final MemberQueryService memberQueryService;
+    private Long refreshTokenExpirationTime;
 
     @PostConstruct
     protected void init() {
@@ -52,7 +46,7 @@ public class TokenProvider {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public TokenView createToken(Authentication authentication) {
+    public TokenView createMemberToken(Authentication authentication) {
         Date now = new Date();
 
         String authorities = authentication.getAuthorities().stream()
@@ -63,40 +57,56 @@ public class TokenProvider {
                 .setSubject(authentication.getName())
                 .claim(StaticValues.Token.CLAIM_ROLE_KEY, authorities)
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
-                .setExpiration(new Date(now.getTime() + Long.parseLong(this.accessTokenExpirationTime)))
+                .setExpiration(new Date(now.getTime() + this.accessTokenExpirationTime))
                 .compact();
 
         String refreshToken = Jwts.builder()
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
-                .setExpiration(new Date(now.getTime() + Long.parseLong(this.refreshTokenExpirationTime)))
+                .setExpiration(new Date(now.getTime() + this.refreshTokenExpirationTime))
                 .compact();
 
         return TokenView.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
-    public TokenView createToken(Member member) {
+    public TokenView createMemberToken(Member member) {
+        return this.createToken(member.getId(), MEMBER_ROLE);
+    }
+
+    public TokenView createGuestToken(String guestId) {
+        return this.createToken(guestId, GUEST_ROLE);
+    }
+
+    public TokenView createToken(String subjectId, String role) {
         Date now = new Date();
 
+        Claims claims = Jwts.claims().setSubject(subjectId);
+        claims.put(StaticValues.Token.CLAIM_ROLE_KEY, role);
+
         String accessToken = Jwts.builder()
-                .setSubject(member.getId())
-                .claim(StaticValues.Token.CLAIM_ROLE_KEY, member.getAuthorities())
+                .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + Long.parseLong(this.accessTokenExpirationTime)))
+                .setExpiration(new Date(now.getTime() + this.accessTokenExpirationTime))
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
 
         String refreshToken = Jwts.builder()
-                .setExpiration(new Date(now.getTime() + Long.parseLong(this.refreshTokenExpirationTime)))
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + this.refreshTokenExpirationTime))
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
 
         return TokenView.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(StaticValues.Token.AUTHORIZATION_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(StaticValues.Token.BEARER_HEADER)) {
-            return bearerToken.substring(7);
+    public String resolveToken(HttpServletRequest request, String tokenName) {
+        // Cookie 에서 Access Token 찾기
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if (tokenName.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
         return null;
     }
@@ -104,7 +114,7 @@ public class TokenProvider {
     public boolean validateToken(String token) {
         try {
             return !this.getClaims(token).getExpiration().before(new Date());
-        } catch (SecurityException | MalformedJwtException e) {
+        } catch (SecurityException | MalformedJwtException | ExpiredJwtException e) {
             e.printStackTrace();
             log.error("TokenProvider validateToken Error ! ", e);
             return false;
@@ -115,14 +125,16 @@ public class TokenProvider {
         Claims claims =  this.getClaims(token);
 
         Object authoritiesClaim = claims.get(StaticValues.Token.CLAIM_ROLE_KEY);
+        String id = claims.getSubject();
 
-        Collection<? extends GrantedAuthority> authorities = Objects.isNull(authoritiesClaim) ?
+        Collection<? extends GrantedAuthority> authorities = ObjectUtils.isEmpty(authoritiesClaim) ?
                 AuthorityUtils.NO_AUTHORITIES : AuthorityUtils.commaSeparatedStringToAuthorityList(authoritiesClaim.toString());
 
-        //UserDetails principal = new User(claims.getSubject(), "", authorities);
-        UserDetails principal = memberQueryService.getUserDetails(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(id, token, authorities);
+    }
 
-        return new UsernamePasswordAuthenticationToken(principal, EMPTY, authorities);
+    public String getUserId(String token) {
+        return this.getClaims(token).getSubject();
     }
 
     private Claims getClaims(String token) {

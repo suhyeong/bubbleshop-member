@@ -1,16 +1,16 @@
 package com.bubbleshop.member.domain.model.converter;
 
-import com.bubbleshop.member.domain.constant.MemberJoinPlatformType;
+import com.bubbleshop.member.domain.constant.MemberProviderType;
 import jakarta.persistence.AttributeConverter;
 
-public class MemberJoinPlatformTypeConverter implements AttributeConverter<MemberJoinPlatformType, String> {
+public class MemberJoinPlatformTypeConverter implements AttributeConverter<MemberProviderType, String> {
     @Override
-    public String convertToDatabaseColumn(MemberJoinPlatformType attribute) {
+    public String convertToDatabaseColumn(MemberProviderType attribute) {
         return attribute.getCode();
     }
 
     @Override
-    public MemberJoinPlatformType convertToEntityAttribute(String dbData) {
-        return MemberJoinPlatformType.find(dbData);
+    public MemberProviderType convertToEntityAttribute(String dbData) {
+        return MemberProviderType.find(dbData);
     }
 }

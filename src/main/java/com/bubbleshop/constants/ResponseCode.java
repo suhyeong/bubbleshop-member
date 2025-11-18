@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ResponseCode {
     SUCCESS("00", "00", "정상적으로 성공하였습니다.", HttpStatus.OK),
+    UNAUTHORIZED("00","01", "유효하지 않은 접근입니다.", HttpStatus.UNAUTHORIZED),
+    SERVICE_UNAVAILABLE("00","02", "서비스를 이용할 수 없습니다.", HttpStatus.SERVICE_UNAVAILABLE),
     INVALID_PARAMETER("00", "03", "잘못된 파라미터입니다.", HttpStatus.BAD_REQUEST),
     NON_EXIST_DATA("00", "04", "데이터가 존재하지 않습니다.", HttpStatus.NOT_FOUND),
     DUPLICATE_DATA("00", "05", "동일한 키의 데이터가 존재합니다.", HttpStatus.BAD_REQUEST),

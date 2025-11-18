@@ -57,8 +57,6 @@ public abstract class GetMemberListCommandDTOAssembler {
             @Mapping(target = "joinDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, member.getJoinDate()) )"),
             @Mapping(target = "withdrawalDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, member.getWithdrawalDate()) )"),
             @Mapping(target = "birthDate", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH, member.getBirthDate()) )"),
-            @Mapping(target = "email", source = "memberEmailInfo.email"),
-            @Mapping(target = "isEmailReceiveAgree", source = "memberEmailInfo.emailReceiveAgree"),
             @Mapping(target = "leftDateToDiscardMemberInfo", expression = "java( DateTimeUtils.convertDateTimeToString(DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT, member.getLeftDateToDiscardMemberInfo()) )"),
     })
     public abstract GetMemberDetailRspDTO toDTO(Member member);

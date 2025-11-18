@@ -2,11 +2,16 @@ package com.bubbleshop.member.application.internal.commandservice;
 
 import com.bubbleshop.config.jwt.TokenProvider;
 import com.bubbleshop.config.jwt.TokenView;
+import com.bubbleshop.config.properties.NaverConfig;
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.exception.ApiException;
+import com.bubbleshop.member.domain.command.CreateLoginAuthorizeCommand;
 import com.bubbleshop.member.domain.command.LoginMemberCommand;
 import com.bubbleshop.member.domain.model.aggregate.Member;
+import com.bubbleshop.member.domain.model.valueobjects.LoginAuthorizeInfo;
 import com.bubbleshop.member.domain.repository.MemberRepository;
+import com.bubbleshop.member.domain.service.AuthorizeService;
+import com.bubbleshop.member.domain.service.AuthorizeServiceStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +24,10 @@ public class MemberCommandService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
+
+    private final AuthorizeServiceStrategy authorizeServiceStrategy;
+    private final AuthorizeService authorizeService;
+    private final NaverConfig naverConfig;
 
     /**
      * 회원 로그인 처리
@@ -35,7 +44,14 @@ public class MemberCommandService {
         }
 
         // todo create token and return / refresh token 은 리턴하지 않고 레디스에 저장?
-        TokenView view = tokenProvider.createToken(member);
+        TokenView view = tokenProvider.createMemberToken(member);
         return view.getAccessToken();
+    }
+
+    public LoginAuthorizeInfo createLoginAuthorize(CreateLoginAuthorizeCommand createLoginAuthorizeCommand) {
+        AuthorizeService authorizeService = authorizeServiceStrategy.getAuthorizeService(createLoginAuthorizeCommand.getProviderType());
+        String state = authorizeService.createState();
+        String url = authorizeService.getAuthorizeUrl(state);
+        return new LoginAuthorizeInfo(url, state);
     }
 }

@@ -48,13 +48,6 @@ public class MemberCustomRepositoryImpl extends QuerydslRepositorySupport implem
             booleanBuilder.and(member.id.eq(command.getMemberId()));
         }
 
-        if(StringUtils.isNotBlank(command.getMemberNickname())) {
-            if(command.isNameContains())
-                booleanBuilder.and(member.nickname.contains(command.getMemberNickname()));
-            else
-                booleanBuilder.and(member.nickname.eq(command.getMemberNickname()));
-        }
-
         if(Objects.nonNull(command.getJoinStartDate()) && Objects.nonNull(command.getJoinEndDate())) {
             booleanBuilder.and(member.joinDate.between(command.getJoinStartDate(), command.getJoinEndDate()));
         }

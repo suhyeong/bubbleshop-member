@@ -22,6 +22,11 @@ spring:
       on-profile: common-config
   flyway:
     enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
 
 logging:
   level:
@@ -61,8 +66,8 @@ host:
 
 jwt:
   secret-key: GfXz4pl0WLO/4Dd9OuqUplp7Gogiz6sGMAvU616OFaflZ83xiE2lYnwrGRPd5N5G # TODO AWS secret manager
-  expiration-time: 3600000 # 1시간: 1 * 60 * 60 * 1000 = 3600000
-  refresh-expiration-time: 10800000 # 3시간: 3 * 60 * 60 * 1000 = 3600000
+  expiration-time: 60000           # 15분 (15 * 60 * 1000 = 900000) 테스트용 1분
+  refresh-expiration-time: 120000 # 3시간: 3 * 60 * 60 * 1000 = 3600000 테스트용 2분
 
 image:
   url:
@@ -138,7 +143,7 @@ spring:
   config:
     activate:
       on-profile: classpath-property
-    import: ""
+    import: "classpath:properties/naver/naver-${spring.profiles.active}.yaml,classpath:properties/kakao/kakao-${spring.profiles.active}.yaml"
 ---
 # cloud properties 사용을 위한 profile
 spring:

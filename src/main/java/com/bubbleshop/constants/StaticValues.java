@@ -17,6 +17,9 @@ public class StaticValues {
 
     public static class RedisKey {
         public static final long REDIS_DEFAULT_EXPIRE_SEC = 600L; // 600초
+        public static final String REFRESH_TOKEN_KEY = "rtk";
+
+        public static final String REDIS_KEY_DIVIDER = ":";
     }
 
     public static class Profiles {
@@ -32,10 +35,16 @@ public class StaticValues {
     }
 
     public static class Token {
-        public static final String AUTHORIZATION_HEADER = "Authorization";
-        public static final String BEARER_HEADER = "Bearer ";
         public static final String CLAIM_ROLE_KEY = "role";
-        public static final String ADMIN_ROLE = "admin";
-        public static final String MEMBER_ROLE = "member";
+        public static final String MEMBER_ROLE = "member_role";
+        public static final String GUEST_ROLE = "guest_role";
+        public static final String GUEST_ID_PREFIX = "G";
+
+        public static final String ACCESS_TOKEN = "access_token";
+        public static final String REFRESH_TOKEN = "refresh_token";
+        public static final String SAME_SITE_ATTRIBUTE = "SameSite";
+        public static final int TOKEN_SECONDS = 1000;
+
+        public static final String MEMBER_ID_REQUEST = "mbrId";
     }
 }

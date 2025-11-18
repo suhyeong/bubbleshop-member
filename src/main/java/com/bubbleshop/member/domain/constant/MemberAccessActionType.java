@@ -10,24 +10,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Getter
-public enum MemberJoinPlatformType {
-    NAVER("N"),
-    KAKAO("K")
+public enum MemberAccessActionType {
+    JOIN("J"),
+    LOGIN("L"),
 
     ;
     private final String code;
 
-    private static final ImmutableMap<String, MemberJoinPlatformType> codes = ImmutableMap.copyOf(
-            Stream.of(values()).collect(Collectors.toMap(MemberJoinPlatformType::getCode, Function.identity())));
+    private static final ImmutableMap<String, MemberAccessActionType> codes = ImmutableMap.copyOf(
+            Stream.of(values()).collect(Collectors.toMap(MemberAccessActionType::getCode, Function.identity())));
 
-    MemberJoinPlatformType(String code) {
+    MemberAccessActionType(String code) {
         this.code = code;
     }
 
-    public static MemberJoinPlatformType find(String value) {
+    public static MemberAccessActionType find(String value) {
         if(!codes.containsKey(value))
             throw new InvalidTypeException(ResponseCode.INVALID_TYPE);
 
         return codes.get(value);
     }
+
 }

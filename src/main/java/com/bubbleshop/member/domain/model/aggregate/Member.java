@@ -1,11 +1,12 @@
 package com.bubbleshop.member.domain.model.aggregate;
 
-import com.bubbleshop.member.domain.constant.MemberJoinPlatformType;
+import com.bubbleshop.member.domain.constant.MemberProviderType;
 import com.bubbleshop.member.domain.model.converter.MemberJoinPlatformTypeConverter;
 import com.bubbleshop.member.domain.model.entity.MemberAuthority;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import jdk.jfr.Description;
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @ToString
 @Getter
 @Builder
+@DynamicUpdate
 public class Member extends TimeEntity implements UserDetails {
     @Serial
     private static final long serialVersionUID = 7976024044942500205L;
@@ -36,12 +38,18 @@ public class Member extends TimeEntity implements UserDetails {
     private String id;
 
     @Description("회원명")
-    @Column(name = "member_name")
+    @Column(name = "member_name") // todo 암호화
     private String name;
 
+    // AES-256-GCM
     @Description("전화번호")
     @Column(name = "phone_num", unique = true) // todo 암호화
     private String phoneNum;
+
+    // HMAC
+    @Description("검색전용 해시 전화번호")
+    @Column(name = "phone_num_hash", unique = true) // todo 암호화
+    private String phoneNumHash;
 
     @Description("가입 일시")
     @Column(name = "join_dt", nullable = false)
@@ -55,10 +63,14 @@ public class Member extends TimeEntity implements UserDetails {
     @Column(name = "birth_dt")
     private LocalDateTime birthDate;
 
-    @Description("가입 경로(플랫폼) 타입")
-    @Column(name = "join_platf_type")
+    @Description("회원가입 제공 플랫폼 코드")
+    @Column(name = "provider_code", nullable = false)
     @Convert(converter = MemberJoinPlatformTypeConverter.class)
-    private MemberJoinPlatformType joinPlatformType;
+    private MemberProviderType providerType;
+
+    @Description("회원가입 제공 고유 아이디")
+    @Column(name = "provider_id", nullable = false)
+    private String providerId; // 회원가입시 가입 플랫폼에서 받은 해당 회원의 고유한 아이디
 
     // TODO Entity 로 빼기
     @Description("포인트")

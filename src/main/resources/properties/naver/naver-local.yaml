@@ -1,0 +1,4 @@
+naver:
+  client-id: xriG1Y78GkTleXE02eD3
+  authorize-url: https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=%s&redirect_uri=%s&state=%s
+  login-callback-url: http://localhost:3001/oauth-callback?provider=naver

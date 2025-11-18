@@ -25,7 +25,6 @@ public class MemberView {
     public MemberView(Member member) {
         this.id = member.getId();
         this.name = member.getName();
-        this.nickname = member.getNickname();
         this.phoneNum = member.getPhoneNum();
         this.joinDate = member.getJoinDate();
         this.withdrawalDate = member.getWithdrawalDate();
