@@ -5,10 +5,10 @@ import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.config.properties.NaverConfig;
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.exception.ApiException;
-import com.bubbleshop.member.domain.command.CreateLoginAuthorizeCommand;
+import com.bubbleshop.member.domain.command.CreateAuthorizePageCommand;
 import com.bubbleshop.member.domain.command.LoginMemberCommand;
 import com.bubbleshop.member.domain.model.aggregate.Member;
-import com.bubbleshop.member.domain.model.valueobjects.LoginAuthorizeInfo;
+import com.bubbleshop.member.domain.model.valueobjects.AuthorizePageInfo;
 import com.bubbleshop.member.domain.repository.MemberRepository;
 import com.bubbleshop.member.domain.service.AuthorizeService;
 import com.bubbleshop.member.domain.service.AuthorizeServiceStrategy;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -48,10 +49,14 @@ public class MemberCommandService {
         return view.getAccessToken();
     }
 
-    public LoginAuthorizeInfo createLoginAuthorize(CreateLoginAuthorizeCommand createLoginAuthorizeCommand) {
-        AuthorizeService authorizeService = authorizeServiceStrategy.getAuthorizeService(createLoginAuthorizeCommand.getProviderType());
+    public AuthorizePageInfo createAuthorizePage(CreateAuthorizePageCommand createAuthorizePageCommand) {
+        AuthorizeService authorizeService = authorizeServiceStrategy.getAuthorizeService(createAuthorizePageCommand.getProviderType());
+        if (ObjectUtils.isEmpty(authorizeService)) {
+            throw new ApiException(ResponseCode.SERVER_ERROR);
+        }
+
         String state = authorizeService.createState();
         String url = authorizeService.getAuthorizeUrl(state);
-        return new LoginAuthorizeInfo(url, state);
+        return new AuthorizePageInfo(url, state);
     }
 }

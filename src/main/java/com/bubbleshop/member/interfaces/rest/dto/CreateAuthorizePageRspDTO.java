@@ -10,7 +10,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @ToString
-public class CreateLoginAuthorizeRspDTO implements Serializable {
+public class CreateAuthorizePageRspDTO implements Serializable {
     @Serial
     private static final long serialVersionUID = 4348010873058359844L;
     private String url;

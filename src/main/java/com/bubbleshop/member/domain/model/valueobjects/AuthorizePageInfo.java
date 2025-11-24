@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginAuthorizeInfo {
+public class AuthorizePageInfo {
     private String url;
     private String state;
 }

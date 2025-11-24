@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateLoginAuthorizeCommand {
+public class CreateAuthorizePageCommand {
     private MemberAccessActionType accessActionType;
     private MemberProviderType providerType;
 }

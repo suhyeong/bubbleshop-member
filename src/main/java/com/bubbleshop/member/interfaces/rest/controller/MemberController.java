@@ -1,19 +1,15 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
 import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
-import com.bubbleshop.member.domain.command.CreateLoginAuthorizeCommand;
-import com.bubbleshop.member.domain.constant.MemberAccessActionType;
-import com.bubbleshop.member.domain.constant.MemberProviderType;
-import com.bubbleshop.member.domain.model.valueobjects.LoginAuthorizeInfo;
-import com.bubbleshop.member.interfaces.rest.dto.CreateLoginAuthorizeRspDTO;
+import com.bubbleshop.member.domain.model.valueobjects.AuthorizePageInfo;
+import com.bubbleshop.member.interfaces.rest.dto.CreateAuthorizePageRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.CreateLoginStateRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.LoginMemberReqDTO;
 import com.bubbleshop.member.interfaces.rest.dto.LoginMemberRspDTO;
-import com.bubbleshop.member.interfaces.transform.CreateLoginAuthorizeCommandDTOAssembler;
+import com.bubbleshop.member.interfaces.transform.CreateAuthorizePageCommandDTOAssembler;
 import com.bubbleshop.member.interfaces.transform.LoginMemberCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import static com.bubbleshop.constants.StaticHeaders.FRONTOFFICE_CHANNEL_HEADER;
 import static com.bubbleshop.member.interfaces.rest.controller.MemberUrl.*;
-import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 @Tag(name = "Member API", description = "회원 API")
 @Slf4j
@@ -31,7 +26,7 @@ import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 public class MemberController extends BaseController {
 
     private final LoginMemberCommandDTOAssembler loginMemberCommandDTOAssembler;
-    private final CreateLoginAuthorizeCommandDTOAssembler createLoginAuthorizeCommandDTOAssembler;
+    private final CreateAuthorizePageCommandDTOAssembler createAuthorizePageCommandDTOAssembler;
 
     private final MemberCommandService memberCommandService;
 
@@ -52,11 +47,11 @@ public class MemberController extends BaseController {
 
     @Operation(summary = "회원가입/로그인 진행 URL 생성 API", description = "회원가입/로그인시 진행시 이후 URL 을 생성한다.")
     @PostMapping(value = AUTH_PAGE)
-    public ResponseEntity<CreateLoginAuthorizeRspDTO> createLoginAuthorize(
+    public ResponseEntity<CreateAuthorizePageRspDTO> createAuthorizePage(
             @PathVariable String provider, @RequestParam(name = "accessType") String accessType) {
-        LoginAuthorizeInfo info = memberCommandService.createLoginAuthorize(
-                createLoginAuthorizeCommandDTOAssembler.toCommand(accessType, provider));
-        CreateLoginAuthorizeRspDTO response = createLoginAuthorizeCommandDTOAssembler.toDTO(info);
+        AuthorizePageInfo info = memberCommandService.createAuthorizePage(
+                createAuthorizePageCommandDTOAssembler.toCommand(accessType, provider));
+        CreateAuthorizePageRspDTO response = createAuthorizePageCommandDTOAssembler.toDTO(info);
         return ResponseEntity.ok().headers(getSuccessHeaders()).body(response);
     }
 

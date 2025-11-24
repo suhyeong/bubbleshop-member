@@ -1,23 +1,11 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
-import com.bubbleshop.config.jwt.TokenProvider;
 import com.bubbleshop.config.jwt.TokenView;
-import com.bubbleshop.constants.StaticValues;
 import com.bubbleshop.member.application.internal.commandservice.AuthCommandService;
-import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
-import com.bubbleshop.member.domain.model.valueobjects.LoginAuthorizeInfo;
-import com.bubbleshop.member.interfaces.rest.dto.CreateLoginAuthorizeRspDTO;
-import com.bubbleshop.member.interfaces.rest.dto.CreateLoginStateRspDTO;
-import com.bubbleshop.member.interfaces.rest.dto.LoginMemberReqDTO;
-import com.bubbleshop.member.interfaces.rest.dto.LoginMemberRspDTO;
-import com.bubbleshop.member.interfaces.transform.CreateLoginAuthorizeCommandDTOAssembler;
-import com.bubbleshop.member.interfaces.transform.LoginMemberCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +16,6 @@ import static com.bubbleshop.constants.StaticHeaders.FRONTOFFICE_CHANNEL_HEADER;
 import static com.bubbleshop.constants.StaticValues.Token.*;
 import static com.bubbleshop.member.interfaces.rest.controller.AuthUrl.AUTH;
 import static com.bubbleshop.member.interfaces.rest.controller.AuthUrl.AUTH_DEFAULT_URL;
-import static com.bubbleshop.member.interfaces.rest.controller.MemberUrl.*;
 
 @Tag(name = "Auth API", description = "인증/인가 API")
 @Slf4j
