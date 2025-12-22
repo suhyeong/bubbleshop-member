@@ -1,9 +1,12 @@
 package com.bubbleshop.member.domain.model.aggregate;
 
+import com.bubbleshop.constants.StaticValues;
 import com.bubbleshop.member.domain.constant.MemberProviderType;
 import com.bubbleshop.member.domain.model.converter.MemberJoinPlatformTypeConverter;
 import com.bubbleshop.member.domain.model.entity.MemberAuthority;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
+import com.bubbleshop.member.domain.view.RequestMemberInfoView;
+import com.bubbleshop.util.DateTimeUtils;
 import jdk.jfr.Description;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
@@ -13,12 +16,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import java.io.Serial;
+import java.security.SecureRandom;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.bubbleshop.util.DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS;
 
 @Entity
 @Table(name = "member_master")
@@ -61,7 +68,7 @@ public class Member extends TimeEntity implements UserDetails {
 
     @Description("생년월일")
     @Column(name = "birth_dt")
-    private LocalDateTime birthDate;
+    private String birthDate; // TODO flyway datetime -> varchar(4)
 
     @Description("회원가입 제공 플랫폼 코드")
     @Column(name = "provider_code", nullable = false)
@@ -83,8 +90,22 @@ public class Member extends TimeEntity implements UserDetails {
     @Transient
     private LocalDateTime leftDateToDiscardMemberInfo; // 탈퇴한 회원일 경우 정보 삭제까지 남은 일자
 
-    public void createMemberId() {
+    public Member(RequestMemberInfoView memberInfoView, MemberProviderType providerType) {
+        LocalDateTime now = LocalDateTime.now();
+        this.id = this.createMemberId(now);
+        this.name = memberInfoView.getName();
+        this.phoneNum = memberInfoView.getPhone(); // TODO
+        this.phoneNumHash = memberInfoView.getPhone(); // TODO
+        this.joinDate = now;
+        this.birthDate = memberInfoView.getBirth(); // MMdd
+        this.providerId = memberInfoView.getId();
+        this.providerType = providerType;
+    }
 
+    public String createMemberId(LocalDateTime now) {
+        SecureRandom random = new SecureRandom();
+        String randomStr = String.format("%03d", random.nextInt(1000));
+        return StaticValues.Prefix.MEMBER_ID_PREFIX + DateTimeUtils.convertDateTimeToString(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS, now) + randomStr;
     }
 
     /**

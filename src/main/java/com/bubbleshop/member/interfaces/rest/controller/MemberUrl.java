@@ -5,6 +5,7 @@ public class MemberUrl {
     public static final String MEMBERS = "members";
     public static final String MEMBER = MEMBERS + "/{memberId}";
 
-    public static final String AUTH_PAGE = "/auth/{provider}/page";
+    public static final String AUTH = "/auth";
+    public static final String AUTH_PAGE = AUTH + "/{provider}/page";
     public static final String AUTH_STATE = "/auth/state";
 }

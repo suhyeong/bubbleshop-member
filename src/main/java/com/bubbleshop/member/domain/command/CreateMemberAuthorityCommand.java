@@ -7,8 +7,10 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CreateAuthorizePageCommand {
+public class CreateMemberAuthorityCommand {
     private String requestId;
+    private String code;
+    private String state;
     private MemberAccessActionType accessActionType;
     private MemberProviderType providerType;
 }

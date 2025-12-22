@@ -1,4 +1,4 @@
-package com.bubbleshop.config;
+package com.bubbleshop.member.infrastructure.feign.config;
 
 import com.bubbleshop.constants.StaticValues;
 import com.bubbleshop.exception.ApiException;

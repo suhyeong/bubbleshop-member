@@ -68,8 +68,8 @@ public class TokenProvider {
         return TokenView.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
-    public TokenView createMemberToken(Member member) {
-        return this.createToken(member.getId(), MEMBER_ROLE);
+    public TokenView createMemberToken(String memberId) {
+        return this.createToken(memberId, MEMBER_ROLE);
     }
 
     public TokenView createGuestToken(String guestId) {
@@ -96,7 +96,12 @@ public class TokenProvider {
                 .signWith(this.secretKey, SignatureAlgorithm.HS512)
                 .compact();
 
-        return TokenView.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return TokenView.builder()
+                .accessToken(accessToken)
+                .accessTokenExpirationTime(accessTokenExpirationTime)
+                .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                .build();
     }
 
     public String resolveToken(HttpServletRequest request, String tokenName) {

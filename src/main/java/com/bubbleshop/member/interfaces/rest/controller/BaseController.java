@@ -4,6 +4,7 @@ import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.constants.StaticValues;
 import com.bubbleshop.constants.StaticValues.Token;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpRequest;
@@ -34,6 +35,10 @@ public class BaseController {
         });
 
         return headers;
+    }
+
+    public Object getRequestAttributeValue(HttpServletRequest request, String attributeName) {
+        return request.getAttribute(attributeName);
     }
 
     /**

@@ -104,7 +104,7 @@ public class ExceptionResponseHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Void> handler(Exception exception) {
         log.error("Exception error : ", exception);
-        return new ResponseEntity<>(null, getErrorHeader(ResponseCode.SERVER_ERROR), ResponseCode.SERVER_ERROR.getStatus());
+        return new ResponseEntity<>(getErrorHeader(ResponseCode.SERVER_ERROR), ResponseCode.SERVER_ERROR.getStatus());
     }
 
 }

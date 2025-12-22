@@ -32,7 +32,7 @@ logging:
   level:
     org.springframework.web.servlet: trace
     #org.springframework.boot.autoconfigure: debug
-    com.bubbleshop.member.infrastructure.feignclient: debug
+    com.bubbleshop.member.infrastructure.feign: debug
     org.hibernate.type.descriptor.sql.BasicBinder: trace
 ---
 # 로컬
@@ -63,6 +63,8 @@ server:
 
 host:
   product: localhost:8080
+  naver-oauth: https://nid.naver.com
+  naver-openapi: https://openapi.naver.com
 
 jwt:
   secret-key: GfXz4pl0WLO/4Dd9OuqUplp7Gogiz6sGMAvU616OFaflZ83xiE2lYnwrGRPd5N5G # TODO AWS secret manager
@@ -143,7 +145,11 @@ spring:
   config:
     activate:
       on-profile: classpath-property
-    import: "classpath:properties/naver/naver-${spring.profiles.active}.yaml,classpath:properties/kakao/kakao-${spring.profiles.active}.yaml"
+    import:
+      - optional:file:.env[.properties]
+      - classpath:properties/naver/naver-${spring.profiles.active}.yaml
+      - classpath:properties/kakao/kakao-${spring.profiles.active}.yaml
+
 ---
 # cloud properties 사용을 위한 profile
 spring:

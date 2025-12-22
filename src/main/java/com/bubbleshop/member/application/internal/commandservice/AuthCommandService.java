@@ -5,17 +5,16 @@ import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.config.redis.RedisTemplateProvider;
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.exception.ApiException;
-import io.lettuce.core.RedisConnectionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
-import static com.bubbleshop.constants.StaticValues.RedisKey.*;
+import static com.bubbleshop.constants.StaticValues.RedisKey.REDIS_KEY_DIVIDER;
+import static com.bubbleshop.constants.StaticValues.RedisKey.REFRESH_TOKEN_KEY;
 import static com.bubbleshop.constants.StaticValues.Token.GUEST_ID_PREFIX;
 
 @Service
@@ -24,9 +23,6 @@ import static com.bubbleshop.constants.StaticValues.Token.GUEST_ID_PREFIX;
 public class AuthCommandService {
     private final TokenProvider tokenProvider;
     private final RedisTemplateProvider redisTemplateProvider;
-
-    @Value("${jwt.refresh-expiration-time}")
-    private Long refreshTokenExpirationTime;
 
     private String getRefreshTokenRedisKey(String userId) {
         return String.format("%s%s%s", REFRESH_TOKEN_KEY, REDIS_KEY_DIVIDER, userId);
@@ -52,13 +48,20 @@ public class AuthCommandService {
         TokenView view = tokenProvider.createGuestToken(guestId);
         // save refresh token to redis
         String redisKey = this.getRefreshTokenRedisKey(guestId);
-        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), refreshTokenExpirationTime, TimeUnit.MILLISECONDS); // TODO
+        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), view.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS); // TODO
+        return view;
+    }
+
+    public TokenView createMemberToken(String memberId) {
+        TokenView view = tokenProvider.createMemberToken(memberId);
+        String redisKey = this.getRefreshTokenRedisKey(memberId);
+        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), view.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS); // TODO
         return view;
     }
 
     public TokenView refreshAccessToken(String cookieRefreshToken, String memberId) {
         // 1. 레디스에서 memberId 로 Refresh Token 조회 & 유효성 체크
-        String redisToken = (String) redisTemplateProvider.getRedisValue(this.getRefreshTokenRedisKey(memberId));
+        String redisToken = redisTemplateProvider.getRedisValue(this.getRefreshTokenRedisKey(memberId), String.class);
         if(Objects.isNull(redisToken) || !cookieRefreshToken.equals(redisToken) || !tokenProvider.validateToken(redisToken)) {
             throw new ApiException(ResponseCode.UNAUTHORIZED);
         }
@@ -67,7 +70,7 @@ public class AuthCommandService {
         if(memberId.startsWith(GUEST_ID_PREFIX)) {
             return this.createGuestToken(memberId);
         } else {
-            return null; // TODO
+            return this.createMemberToken(memberId);
         }
     }
 

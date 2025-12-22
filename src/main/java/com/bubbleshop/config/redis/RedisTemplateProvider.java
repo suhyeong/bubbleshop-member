@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -15,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 public class RedisTemplateProvider {
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public Object getRedisValue(String key) {
+    public <T> T getRedisValue(String key, Class<T> returnClass) {
         try {
-            return redisTemplate.opsForValue().get(key);
+            return returnClass.cast(redisTemplate.opsForValue().get(key));
         } catch (RedisConnectionException e) {
             throw new ApiException(ResponseCode.SERVICE_UNAVAILABLE);
         }
@@ -25,5 +26,9 @@ public class RedisTemplateProvider {
 
     public void setRedisValue(String key, String value, Long expireTime, TimeUnit timeUnit) {
         redisTemplate.opsForValue().set(key, value, expireTime, timeUnit);
+    }
+
+    public void deleteRedisValue(String key) {
+        redisTemplate.delete(key);
     }
 }

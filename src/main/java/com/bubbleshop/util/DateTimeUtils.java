@@ -17,6 +17,7 @@ public class DateTimeUtils {
     public static final String DATE_FORMAT_YYYY_MM_DD_DASH = "yyyy-MM-dd";
     public static final String DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT = "yyyy-MM-dd HH:mm:ss";
     public static final String DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS = "yyyyMMddHHmmssSSS";
+    public static final String DATE_FORMAT_KOREA_YYYY_MM_DD = "yyyy년 MM월 dd일";
 
     public static String convertDateTimeToString(String pattern, LocalDateTime dateTime) {
         if(Objects.isNull(dateTime))

@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @ToString
 public class NaverConfig {
     private String clientId;
+    private String clientSecret;
     private String authorizeUrl;
     private String loginCallbackUrl;
 }

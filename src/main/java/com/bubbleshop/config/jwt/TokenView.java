@@ -7,5 +7,7 @@ import lombok.Getter;
 @Builder
 public class TokenView {
     private String accessToken;
+    private Long accessTokenExpirationTime;
     private String refreshToken;
+    private Long refreshTokenExpirationTime;
 }

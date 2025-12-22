@@ -10,14 +10,17 @@ public class StaticValues {
     public static final String COMMON_N = "N";
 
     public static final String ADMIN = "admin"; // TODO
+    public static final String DASH = "-";
 
     public static class Prefix {
         public static final String COMMENT_NO_PREFIX = "C";
+        public static final String MEMBER_ID_PREFIX = "M";
     }
 
     public static class RedisKey {
         public static final long REDIS_DEFAULT_EXPIRE_SEC = 600L; // 600초
         public static final String REFRESH_TOKEN_KEY = "rtk";
+        public static final String STATE_KEY = "stt";
 
         public static final String REDIS_KEY_DIVIDER = ":";
     }
