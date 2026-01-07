@@ -16,10 +16,14 @@ import com.bubbleshop.member.domain.service.AuthorizeServiceStrategy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.concurrent.TimeUnit;
+
+import static com.bubbleshop.constants.StaticValues.Token.GUEST_ROLE;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +84,16 @@ public class MemberCommandService {
         String key = String.format("%s%s%s", StaticValues.RedisKey.STATE_KEY, StaticValues.RedisKey.REDIS_KEY_DIVIDER, command.getRequestId());
         redisTemplateProvider.setRedisValue(key, state, 60000L, TimeUnit.MILLISECONDS);
         return new AuthorizePageInfo(url, state);
+    }
+
+    public boolean isAuthorityMemberRole() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isGuest = authentication.getAuthorities().stream()
+                .allMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(GUEST_ROLE));
+        return !isGuest;
+    }
+
+    public TokenView deleteMemberAuthority() {
+        return authCommandService.createGuestToken();
     }
 }

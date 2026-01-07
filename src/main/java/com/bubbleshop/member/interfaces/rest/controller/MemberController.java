@@ -6,6 +6,7 @@ import com.bubbleshop.member.application.internal.commandservice.MemberCommandSe
 import com.bubbleshop.member.domain.model.valueobjects.AuthorizePageInfo;
 import com.bubbleshop.member.interfaces.rest.dto.CreateAuthorizePageRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.CreateMemberAuthorityReqDTO;
+import com.bubbleshop.member.interfaces.rest.dto.GetAuthorityRoleRspDTO;
 import com.bubbleshop.member.interfaces.transform.CreateAuthorizePageCommandDTOAssembler;
 import com.bubbleshop.member.interfaces.transform.CreateMemberAuthorityCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,5 +51,22 @@ public class MemberController extends BaseController {
         setTokenToCookie(response, ACCESS_TOKEN, view.getAccessToken(), view.getAccessTokenExpirationTime());
         setTokenToCookie(response, REFRESH_TOKEN, view.getRefreshToken(), view.getRefreshTokenExpirationTime());
         return ResponseEntity.ok().headers(getSuccessHeaders()).build();
+    }
+
+    @Operation(summary = "회원 로그아웃 API", description = "회원의 로그아웃을 수행한다.")
+    @DeleteMapping(value = AUTH)
+    public ResponseEntity<Void> deleteMemberAuthority(HttpServletResponse response) {
+        TokenView view = memberCommandService.deleteMemberAuthority();
+        setTokenToCookie(response, ACCESS_TOKEN, view.getAccessToken(), view.getAccessTokenExpirationTime());
+        setTokenToCookie(response, REFRESH_TOKEN, view.getRefreshToken(), view.getRefreshTokenExpirationTime());
+        return ResponseEntity.ok().headers(getSuccessHeaders()).build();
+    }
+
+    @Operation(summary = "회원 토큰 롤 조회 API", description = "토큰으로 회원/비회원 롤 정보를 조회한다.")
+    @GetMapping(value = AUTH)
+    public ResponseEntity<GetAuthorityRoleRspDTO> getAuthorityRole() {
+        boolean isMember = memberCommandService.isAuthorityMemberRole();
+        GetAuthorityRoleRspDTO response = new GetAuthorityRoleRspDTO(isMember);
+        return ResponseEntity.ok().headers(getSuccessHeaders()).body(response);
     }
 }
