@@ -1,7 +1,7 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
-import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.config.jwt.RequestId;
+import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
 import com.bubbleshop.member.domain.model.valueobjects.AuthorizePageInfo;
 import com.bubbleshop.member.interfaces.rest.dto.CreateAuthorizePageRspDTO;
@@ -19,7 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import static com.bubbleshop.constants.StaticHeaders.FRONTOFFICE_CHANNEL_HEADER;
-import static com.bubbleshop.constants.StaticValues.Token.*;
+import static com.bubbleshop.constants.StaticValues.Token.ACCESS_TOKEN;
+import static com.bubbleshop.constants.StaticValues.Token.REFRESH_TOKEN;
 import static com.bubbleshop.member.interfaces.rest.controller.MemberUrl.*;
 
 @Tag(name = "Member API", description = "회원 API")
@@ -36,10 +37,9 @@ public class MemberController extends BaseController {
 
     @Operation(summary = "회원가입/로그인 진행 URL 생성 API", description = "회원가입/로그인시 진행시 이후 URL 을 생성한다.")
     @PostMapping(value = AUTH_PAGE)
-    public ResponseEntity<CreateAuthorizePageRspDTO> createAuthorizePage(
-            @RequestId String requestId, @PathVariable String provider, @RequestParam(name = "accessType") String accessType) {
+    public ResponseEntity<CreateAuthorizePageRspDTO> createAuthorizePage(@RequestId String requestId, @PathVariable String provider) {
         AuthorizePageInfo info = memberCommandService.createAuthorizePage(
-                createAuthorizePageCommandDTOAssembler.toCommand(requestId, accessType, provider));
+                createAuthorizePageCommandDTOAssembler.toCommand(requestId, provider));
         CreateAuthorizePageRspDTO response = createAuthorizePageCommandDTOAssembler.toDTO(info);
         return ResponseEntity.ok().headers(getSuccessHeaders()).body(response);
     }

@@ -21,12 +21,7 @@ public class KakaoAuthorizeService extends AuthorizeService {
     }
 
     @Override
-    public Member joinMember(String code, String state) {
-        return null; // TODO
-    }
-
-    @Override
-    public Member loginMember(String code, String state) {
+    public Member createMemberAuthority(String code, String state) {
         return null; // TODO
     }
 }

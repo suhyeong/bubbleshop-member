@@ -36,5 +36,8 @@ public class GetNaverMemberProfileRspDTO extends NaverRspDTO {
 
         @JsonProperty("mobile")
         private String mobile; // 010-0000-0000
+
+        @JsonProperty("email")
+        private String email;
     }
 }

@@ -14,10 +14,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR,
         imports = {MemberAccessActionType.class, MemberProviderType.class})
 public abstract class CreateAuthorizePageCommandDTOAssembler {
-
-    @Mapping(target="accessActionType", expression = " java( MemberAccessActionType.find(accessType) ) ")
     @Mapping(target="providerType", expression = " java( MemberProviderType.findPath(providerType) ) ")
-    public abstract CreateAuthorizePageCommand toCommand(String requestId, String accessType, String providerType);
+    public abstract CreateAuthorizePageCommand toCommand(String requestId, String providerType);
 
     public abstract CreateAuthorizePageRspDTO toDTO(AuthorizePageInfo info);
 }

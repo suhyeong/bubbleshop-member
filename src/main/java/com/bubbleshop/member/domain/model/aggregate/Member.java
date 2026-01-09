@@ -4,11 +4,14 @@ import com.bubbleshop.constants.StaticValues;
 import com.bubbleshop.member.domain.constant.MemberProviderType;
 import com.bubbleshop.member.domain.model.converter.MemberJoinPlatformTypeConverter;
 import com.bubbleshop.member.domain.model.entity.MemberAuthority;
+import com.bubbleshop.member.domain.model.entity.MemberSocialAccount;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import com.bubbleshop.member.domain.view.RequestMemberInfoView;
 import com.bubbleshop.util.DateTimeUtils;
 import jdk.jfr.Description;
 import lombok.*;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -35,7 +38,7 @@ import static com.bubbleshop.util.DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_
 @Getter
 @Builder
 @DynamicUpdate
-public class Member extends TimeEntity implements UserDetails {
+public class Member extends TimeEntity {
     @Serial
     private static final long serialVersionUID = 7976024044942500205L;
 
@@ -68,38 +71,29 @@ public class Member extends TimeEntity implements UserDetails {
 
     @Description("생년월일")
     @Column(name = "birth_dt")
-    private String birthDate; // TODO flyway datetime -> varchar(4)
-
-    @Description("회원가입 제공 플랫폼 코드")
-    @Column(name = "provider_code", nullable = false)
-    @Convert(converter = MemberJoinPlatformTypeConverter.class)
-    private MemberProviderType providerType;
-
-    @Description("회원가입 제공 고유 아이디")
-    @Column(name = "provider_id", nullable = false)
-    private String providerId; // 회원가입시 가입 플랫폼에서 받은 해당 회원의 고유한 아이디
+    private String birthDate;
 
     // TODO Entity 로 빼기
     @Description("포인트")
     @Column(name = "point")
     private int point;
 
-    @OneToMany(mappedBy = "member", targetEntity = MemberAuthority.class, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MemberAuthority> authorities = new ArrayList<>(); //회원 권한
+    @OneToMany(mappedBy = "member", targetEntity = MemberSocialAccount.class, cascade = CascadeType.ALL)
+    private List<MemberSocialAccount> socialAccounts = new ArrayList<>(); //회원 연동 계정
 
     @Transient
     private LocalDateTime leftDateToDiscardMemberInfo; // 탈퇴한 회원일 경우 정보 삭제까지 남은 일자
 
     public Member(RequestMemberInfoView memberInfoView, MemberProviderType providerType) {
         LocalDateTime now = LocalDateTime.now();
-        this.id = this.createMemberId(now);
+        String memberId = this.createMemberId(now);
+        this.id = memberId;
         this.name = memberInfoView.getName();
         this.phoneNum = memberInfoView.getPhone(); // TODO
         this.phoneNumHash = memberInfoView.getPhone(); // TODO
         this.joinDate = now;
         this.birthDate = memberInfoView.getBirth(); // MMdd
-        this.providerId = memberInfoView.getId();
-        this.providerType = providerType;
+        this.socialAccounts.add(new MemberSocialAccount(memberId, memberInfoView, providerType));
     }
 
     public String createMemberId(LocalDateTime now) {
@@ -117,38 +111,4 @@ public class Member extends TimeEntity implements UserDetails {
         }
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities.stream().map(item -> new SimpleGrantedAuthority(item.getAuthority().getRole())).collect(Collectors.toList());
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
-    }
-
-    @Override
-    public String getUsername() {
-        return this.id;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

@@ -10,4 +10,5 @@ public class RequestMemberInfoView {
     private String name;
     private String birth;
     private String phone;
+    private String email;
 }

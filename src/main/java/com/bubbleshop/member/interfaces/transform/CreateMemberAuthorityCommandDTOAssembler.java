@@ -8,21 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.*;
 
 @Slf4j
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR, imports = { MemberProviderType.class })
 public abstract class CreateMemberAuthorityCommandDTOAssembler {
-    @Mapping(target="accessActionType", ignore = true)
-    @Mapping(target="providerType", ignore = true)
+    @Mapping(target="providerType", expression = " java( MemberProviderType.findPath(reqDTO.getProvider()) ) ")
     public abstract CreateMemberAuthorityCommand toCommand(String requestId, CreateMemberAuthorityReqDTO reqDTO);
-
-    @AfterMapping
-    protected void afterMappingToCommand(@MappingTarget CreateMemberAuthorityCommand.CreateMemberAuthorityCommandBuilder builder,
-                                         String requestId, CreateMemberAuthorityReqDTO reqDTO) {
-        String accessTypeCode = reqDTO.getState().substring(0,1);
-        MemberAccessActionType actionType = MemberAccessActionType.find(accessTypeCode);
-
-        builder.accessActionType(actionType)
-                .providerType(MemberProviderType.findPath(reqDTO.getProvider()))
-                .build();
-    }
-
 }

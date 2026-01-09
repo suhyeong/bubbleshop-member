@@ -9,6 +9,5 @@ import lombok.Getter;
 @Builder
 public class CreateAuthorizePageCommand {
     private String requestId;
-    private MemberAccessActionType accessActionType;
     private MemberProviderType providerType;
 }

@@ -33,8 +33,4 @@ public class MemberQueryService {
         member.calcLeftDateToDiscardMemberInfo();
         return member;
     }
-
-    public UserDetails getUserDetails(String memberId) {
-        return memberRepository.findById(memberId).orElseThrow(() -> new ApiException(ResponseCode.NON_EXIST_DATA));
-    }
 }

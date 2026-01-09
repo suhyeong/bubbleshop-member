@@ -27,7 +27,7 @@ public class NaverFeignService {
 
     /**
      * FeignClient 통신에는 성공하여 200 OK 이지만, 에러가 발생했을 경우 에러 코드를 찾아 리턴
-     * @param responseDto
+     * @param responseDto 요청 DTO
      */
     private void checkResponseDTO(NaverRspDTO responseDto) {
         if (StringUtils.isNotBlank(responseDto.getError()) ||
@@ -41,8 +41,8 @@ public class NaverFeignService {
 
     /**
      * 접근 토큰 발급/갱신/삭제 요청
-     * @param code
-     * @param state
+     * @param code 로그인 code
+     * @param state 로그인 state
      */
     public RequestTokenView requestAccessToken(String code, String state, String accessToken, String refreshToken, TokenType grantType) {
         try {
@@ -76,8 +76,8 @@ public class NaverFeignService {
 
     /**
      * 회원 정보 요청
-     * @param accessToken
-     * @return
+     * @param accessToken AccessToken
+     * @return 회원 정보 View
      */
     public RequestMemberInfoView requestMemberProfile(String accessToken) {
         try {
@@ -93,6 +93,7 @@ public class NaverFeignService {
                     .name(result.getName())
                     .birth(result.getBirthday().replace(StaticValues.DASH, StringUtils.EMPTY)) // MMdd
                     .phone(result.getMobile()) // TODO 휴대폰 정보 형식 확정 필요
+                    .email(result.getEmail())
                     .build();
         } catch (Exception e) {
             if(e instanceof ApiException) throw e;

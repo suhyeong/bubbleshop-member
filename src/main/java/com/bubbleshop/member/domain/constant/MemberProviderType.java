@@ -11,12 +11,13 @@ import java.util.stream.Stream;
 
 @Getter
 public enum MemberProviderType {
-    NAVER("N", "naver"),
-    KAKAO("K", "kakao")
+    NAVER("N", "naver", "네이버"),
+    KAKAO("K", "kakao", "카카오")
 
     ;
     private final String code;
     private final String path;
+    private final String name;
 
     private static final ImmutableMap<String, MemberProviderType> codes = ImmutableMap.copyOf(
             Stream.of(values()).collect(Collectors.toMap(MemberProviderType::getCode, Function.identity())));
@@ -24,9 +25,10 @@ public enum MemberProviderType {
     private static final ImmutableMap<String, MemberProviderType> paths = ImmutableMap.copyOf(
             Stream.of(values()).collect(Collectors.toMap(MemberProviderType::getPath, Function.identity())));
 
-    MemberProviderType(String code, String path) {
+    MemberProviderType(String code, String path, String name) {
         this.code = code;
         this.path = path;
+        this.name = name;
     }
 
     public static MemberProviderType find(String value) {

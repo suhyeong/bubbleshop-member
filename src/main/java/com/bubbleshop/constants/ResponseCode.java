@@ -17,9 +17,7 @@ public enum ResponseCode {
 
     INVALID_TYPE("01", "01", "유효하지 않은 타입입니다.", HttpStatus.BAD_REQUEST),
 
-    MEMBER_NOT_EXIST("02", "01", "회원 정보가 존재하지 않습니다. 회원가입을 진행해주세요.", HttpStatus.BAD_REQUEST),
-    MEMBER_ALREADY_EXIST("02", "02", "이미 회원가입이 되어있는 계정입니다.\n가입일시 : {0}\n로그인을 시도해주세요.", HttpStatus.BAD_REQUEST),
-    SNS_MEMBER_NOT_EXIST("02", "03", "시도한 플랫폼에 계정이 존재하지 않습니다.", HttpStatus.BAD_REQUEST),
+    SNS_MEMBER_NOT_EXIST("02", "01", "시도한 플랫폼에 계정이 존재하지 않습니다.", HttpStatus.BAD_REQUEST),
 
     S3_PUT_DATA_ERROR("05", "01", "파일 업로드시 에러가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
     S3_COPY_DATA_ERROR("05","02", "파일 복제시 에러가 발생하였습니다.", HttpStatus.INTERNAL_SERVER_ERROR),
