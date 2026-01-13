@@ -12,6 +12,7 @@ import com.bubbleshop.member.domain.model.aggregate.Member;
 import com.bubbleshop.member.domain.model.valueobjects.AuthorizePageInfo;
 import com.bubbleshop.member.domain.service.AuthorizeService;
 import com.bubbleshop.member.domain.service.AuthorizeServiceStrategy;
+import com.bubbleshop.member.domain.view.CreateMemberAuthorityView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -46,7 +47,7 @@ public class MemberCommandService {
      * 2. 로그인 요청을 각 소셜 미디어에 따라 수행
      * @param command 로그인 Command
      */
-    public TokenView createMemberAuthority(CreateMemberAuthorityCommand command) {
+    public CreateMemberAuthorityView createMemberAuthority(CreateMemberAuthorityCommand command) {
         String key = String.format("%s%s%s", StaticValues.RedisKey.STATE_KEY, StaticValues.RedisKey.REDIS_KEY_DIVIDER, command.getRequestId());
         String redisState = redisTemplateProvider.getRedisValue(key, String.class);
 
@@ -57,7 +58,7 @@ public class MemberCommandService {
 
         AuthorizeService authorizeService = this.getAuthorizeServiceByProviderType(command.getProviderType());
         Member member = authorizeService.createMemberAuthority(command.getCode(), command.getState());
-        return authCommandService.createMemberToken(member.getId());
+        return new CreateMemberAuthorityView(authCommandService.createMemberToken(member.getId()), member.isNewMember());
     }
 
     public AuthorizePageInfo createAuthorizePage(CreateAuthorizePageCommand command) {

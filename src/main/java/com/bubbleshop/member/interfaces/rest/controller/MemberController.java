@@ -4,8 +4,10 @@ import com.bubbleshop.config.jwt.RequestId;
 import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
 import com.bubbleshop.member.domain.model.valueobjects.AuthorizePageInfo;
+import com.bubbleshop.member.domain.view.CreateMemberAuthorityView;
 import com.bubbleshop.member.interfaces.rest.dto.CreateAuthorizePageRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.CreateMemberAuthorityReqDTO;
+import com.bubbleshop.member.interfaces.rest.dto.CreateMemberAuthorityRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.GetAuthorityRoleRspDTO;
 import com.bubbleshop.member.interfaces.transform.CreateAuthorizePageCommandDTOAssembler;
 import com.bubbleshop.member.interfaces.transform.CreateMemberAuthorityCommandDTOAssembler;
@@ -46,11 +48,12 @@ public class MemberController extends BaseController {
 
     @Operation(summary = "회원 회원가입/로그인 API", description = "회원의 회원가입/로그인을 수행한다.")
     @PostMapping(value = AUTH)
-    public ResponseEntity<Void> createMemberAuthority(@RequestId String requestId, HttpServletResponse response, @RequestBody @Valid CreateMemberAuthorityReqDTO createMemberAuthorityReqDTO) {
-        TokenView view = memberCommandService.createMemberAuthority(createMemberAuthorityCommandDTOAssembler.toCommand(requestId, createMemberAuthorityReqDTO));
+    public ResponseEntity<CreateMemberAuthorityRspDTO> createMemberAuthority(@RequestId String requestId, HttpServletResponse response, @RequestBody @Valid CreateMemberAuthorityReqDTO createMemberAuthorityReqDTO) {
+        CreateMemberAuthorityView view = memberCommandService.createMemberAuthority(createMemberAuthorityCommandDTOAssembler.toCommand(requestId, createMemberAuthorityReqDTO));
         setTokenToCookie(response, ACCESS_TOKEN, view.getAccessToken(), view.getAccessTokenExpirationTime());
         setTokenToCookie(response, REFRESH_TOKEN, view.getRefreshToken(), view.getRefreshTokenExpirationTime());
-        return ResponseEntity.ok().headers(getSuccessHeaders()).build();
+        CreateMemberAuthorityRspDTO responseBody = createMemberAuthorityCommandDTOAssembler.toRspDTO(view);
+        return ResponseEntity.ok().headers(getSuccessHeaders()).body(responseBody);
     }
 
     @Operation(summary = "회원 로그아웃 API", description = "회원의 로그아웃을 수행한다.")

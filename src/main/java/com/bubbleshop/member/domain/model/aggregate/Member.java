@@ -84,6 +84,9 @@ public class Member extends TimeEntity {
     @Transient
     private LocalDateTime leftDateToDiscardMemberInfo; // 탈퇴한 회원일 경우 정보 삭제까지 남은 일자
 
+    @Transient
+    private boolean isNewMember;
+
     public Member(RequestMemberInfoView memberInfoView, MemberProviderType providerType) {
         LocalDateTime now = LocalDateTime.now();
         String memberId = this.createMemberId(now);
@@ -100,6 +103,13 @@ public class Member extends TimeEntity {
         SecureRandom random = new SecureRandom();
         String randomStr = String.format("%03d", random.nextInt(1000));
         return StaticValues.Prefix.MEMBER_ID_PREFIX + DateTimeUtils.convertDateTimeToString(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS, now) + randomStr;
+    }
+
+    /**
+     * 신규 회원일 경우 Transient 값 true 로 변경
+     */
+    public void setNewMember() {
+        this.isNewMember = true;
     }
 
     /**

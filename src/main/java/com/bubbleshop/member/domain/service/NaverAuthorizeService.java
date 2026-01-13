@@ -55,6 +55,10 @@ public class NaverAuthorizeService extends AuthorizeService {
         // 3. 회원 존재 여부 체크
         Optional<Member> member = memberRepository.findMemberJoinMemberSocialAccount(this.getAuthorizeProviderType(), memberInfoView.getId(), memberInfoView.getEmail());
         // 4. 회원 정보 존재할 경우 리턴, 없을 경우 새 회원 생성
-        return member.orElseGet(() -> memberRepository.save(new Member(memberInfoView, this.getAuthorizeProviderType())));
+        return member.orElseGet(() -> {
+                Member newMember = memberRepository.save(new Member(memberInfoView, this.getAuthorizeProviderType()));
+                newMember.setNewMember();
+                return newMember;
+        });
     }
 }
