@@ -33,11 +33,11 @@ public class MemberManagementController extends BaseController {
     public ResponseEntity<Object> getMemberList(@RequestParam(required = false, defaultValue = "1") Integer page,
                                                  @RequestParam(required = false, defaultValue = "1") Integer size,
                                                  @RequestParam(required = false) String memberId,
-                                                 @RequestParam(required = false) String memberNickname,
-                                                 @RequestParam(required = false, defaultValue = "false") boolean isMemberNicknameContains,
+                                                 @RequestParam(required = false) String memberEmail,
+                                                 @RequestParam(required = false, defaultValue = "false") boolean isMemberEmailContains,
                                                  @RequestParam(required = false, defaultValue = "") String joinStartDate,
                                                  @RequestParam(required = false, defaultValue = "") String joinEndDate) {
-        GetMemberListCommand command = getMemberListCommandDTOAssembler.toCommand(page, size, memberId, memberNickname, isMemberNicknameContains, joinStartDate, joinEndDate);
+        GetMemberListCommand command = getMemberListCommandDTOAssembler.toCommand(page, size, memberId, memberEmail, isMemberEmailContains, joinStartDate, joinEndDate);
         MemberListView view = memberQueryService.getMemberList(command);
         GetMemberListRspDTO response = getMemberListCommandDTOAssembler.toDTO(view);
         return ResponseEntity.ok()

@@ -34,9 +34,9 @@ public class ReviewCustomRepositoryImpl extends QuerydslRepositorySupport implem
     @Override
     public List<ReviewView> findReviewListWithPagination(GetReviewListCommand command) {
         return jpaQueryFactory
-                .select(Projections.constructor(ReviewView.class, review, member))
-                .from(review, member)
-                .where(this.conditionReviewList(command).and(member.id.eq(review.memberId)))
+                .select(Projections.constructor(ReviewView.class, review))
+                .from(review)
+                .where(this.conditionReviewList(command))
                 .limit(command.getPageable().getPageSize())
                 .offset(command.getPageable().getOffset())
                 .fetch();

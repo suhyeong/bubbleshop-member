@@ -41,12 +41,4 @@ public class MemberSocialAccount extends TimeEntity {
         this.providerId = memberInfoView.getId();
         this.providerEmail = memberInfoView.getEmail();
     }
-
-    public boolean isSameProviderType(MemberProviderType providerType) {
-        return providerType.equals(this.id.getProviderType());
-    }
-
-    public String getProviderTypeName() {
-        return this.id.getProviderType().getName();
-    }
 }

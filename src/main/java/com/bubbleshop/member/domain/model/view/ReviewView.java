@@ -22,7 +22,6 @@ import java.util.Objects;
 public class ReviewView {
     private String reviewNo;
     private String memberId;
-    private String memberName;
     private String productCode;
     private String productName;
     private int productScore;
@@ -35,10 +34,9 @@ public class ReviewView {
     private List<CommentView> comments;
 
     @QueryProjection
-    public ReviewView(Review review, Member member) {
+    public ReviewView(Review review) {
         this.reviewNo = review.getReviewNo();
         this.memberId = review.getMemberId();
-        this.memberName = member.getName();
         this.productCode = review.getProductCode();
         this.productScore = review.getProductScore();
         this.reviewContent = review.getReviewContents();
@@ -47,8 +45,8 @@ public class ReviewView {
         this.createdDate = review.getCreatedDate();
     }
 
-    public ReviewView(Review review, Member member, ProductView product, List<Comment> comments, String imageUrl) {
-        this(review, member);
+    public ReviewView(Review review, ProductView product, List<Comment> comments, String imageUrl) {
+        this(review);
         this.applyProductNameInfo(product);
         this.images = new ArrayList<>();
         review.getImages().forEach(image -> this.images.add(new ReviewImageView(image, imageUrl)));

@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class MemberView {
     private String id;
     private String name;
-    private String nickname;
     private String phoneNum;
     private LocalDateTime joinDate;
     private LocalDateTime withdrawalDate;

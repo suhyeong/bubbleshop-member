@@ -34,6 +34,7 @@ public class MemberCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 .select(member.id)
                 .from(member)
                 .where(this.conditionMemberList(command))
+                .join(memberSocialAccount).on(memberSocialAccount.id.memberId.eq(member.id))
                 .fetch().size();
     }
 
@@ -43,6 +44,7 @@ public class MemberCustomRepositoryImpl extends QuerydslRepositorySupport implem
                 .select(Projections.constructor(MemberView.class, member))
                 .from(member)
                 .where(this.conditionMemberList(command))
+                .join(memberSocialAccount).on(memberSocialAccount.id.memberId.eq(member.id))
                 .limit(command.getPageable().getPageSize())
                 .offset(command.getPageable().getOffset())
                 .fetch();
@@ -53,6 +55,12 @@ public class MemberCustomRepositoryImpl extends QuerydslRepositorySupport implem
 
         if(StringUtils.isNotBlank(command.getMemberId())) {
             booleanBuilder.and(member.id.eq(command.getMemberId()));
+        }
+
+        if(StringUtils.isNotBlank(command.getMemberEmail())) {
+            String email = command.getMemberEmail();
+            booleanBuilder.and(command.isEmailContains() ? memberSocialAccount.providerEmail.contains(email)
+                    : memberSocialAccount.providerEmail.eq(email));
         }
 
         if(Objects.nonNull(command.getJoinStartDate()) && Objects.nonNull(command.getJoinEndDate())) {
