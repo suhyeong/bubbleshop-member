@@ -4,32 +4,30 @@ import com.bubbleshop.config.jwt.AuthenticationRequiredFilter;
 import com.bubbleshop.config.jwt.JwtAuthenticationFilter;
 import com.bubbleshop.config.jwt.RefreshTokenFilter;
 import com.bubbleshop.config.jwt.TokenProvider;
-import com.bubbleshop.config.redis.RedisTemplateProvider;
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.constants.StaticValues;
+import com.bubbleshop.util.EncodeUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
+
+import static com.bubbleshop.constants.StaticHeaders.BACKOFFICE_CHANNEL;
 
 @Configuration
 @EnableWebSecurity
@@ -63,6 +61,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> {
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS); // 세션 생성 및 사용 X
                 })
+                .securityMatcher(request -> !request.getHeader(HttpHeaders.FROM).equals(BACKOFFICE_CHANNEL))
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/actuator/health").permitAll() // health check
                             .requestMatchers("/auth/v1/auth").permitAll() // create token, refresh token
@@ -74,7 +73,7 @@ public class SecurityConfig {
                         .authenticationEntryPoint((request, response, authenticationException) -> {
                             response.setStatus(ResponseCode.UNAUTHORIZED.getStatus().value());
                             response.setHeader(StaticValues.RESULT_CODE, ResponseCode.UNAUTHORIZED.getCode());
-                            response.setHeader(StaticValues.RESULT_MESSAGE, ResponseCode.UNAUTHORIZED.getMessage());
+                            response.setHeader(StaticValues.RESULT_MESSAGE, EncodeUtil.encodeStringWithUTF8(ResponseCode.UNAUTHORIZED.getMessage()));
                             response.setContentType("application/json");
                         })
                         .accessDeniedHandler((request, response, accessDeniedException) -> {

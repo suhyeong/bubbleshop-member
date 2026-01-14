@@ -8,12 +8,11 @@ import com.bubbleshop.member.domain.repository.MemberRepository;
 import com.bubbleshop.member.domain.view.RequestMemberInfoView;
 import com.bubbleshop.member.domain.view.RequestTokenView;
 import com.bubbleshop.member.infrastructure.feign.NaverFeignService;
+import com.bubbleshop.util.EncodeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 
 @Slf4j
@@ -31,7 +30,7 @@ public class NaverAuthorizeService extends AuthorizeService {
 
     @Override
     public String getAuthorizeUrl(String state) {
-        String callbackUrl = URLEncoder.encode(naverConfig.getLoginCallbackUrl(), StandardCharsets.UTF_8);
+        String callbackUrl = EncodeUtil.encodeStringWithUTF8(naverConfig.getLoginCallbackUrl());
         return String.format(naverConfig.getAuthorizeUrl(), naverConfig.getClientId(), callbackUrl, state);
     }
 

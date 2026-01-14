@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static com.bubbleshop.constants.ResponseCode.INVALID_PARAMETER;
 
-public class DateTimeUtils {
+public class DateTimeUtil {
     public static final String DATE_FORMAT_YYYY_MM_DD_DOT = "yyyy.MM.dd";
     public static final String DATE_FORMAT_YYYY_MM_DD_DASH = "yyyy-MM-dd";
     public static final String DATE_FORMAT_YYYY_MM_DD_DASH_HH_MM_SS_DOT = "yyyy-MM-dd HH:mm:ss";

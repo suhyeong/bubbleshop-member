@@ -2,33 +2,23 @@ package com.bubbleshop.member.domain.model.aggregate;
 
 import com.bubbleshop.constants.StaticValues;
 import com.bubbleshop.member.domain.constant.MemberProviderType;
-import com.bubbleshop.member.domain.model.converter.MemberJoinPlatformTypeConverter;
-import com.bubbleshop.member.domain.model.entity.MemberAuthority;
 import com.bubbleshop.member.domain.model.entity.MemberSocialAccount;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
 import com.bubbleshop.member.domain.view.RequestMemberInfoView;
-import com.bubbleshop.util.DateTimeUtils;
+import com.bubbleshop.util.DateTimeUtil;
 import jdk.jfr.Description;
 import lombok.*;
-import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.DynamicUpdate;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.*;
 import java.io.Serial;
 import java.security.SecureRandom;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-import static com.bubbleshop.util.DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS;
+import static com.bubbleshop.util.DateTimeUtil.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS;
 
 @Entity
 @Table(name = "member_master")
@@ -102,7 +92,7 @@ public class Member extends TimeEntity {
     public String createMemberId(LocalDateTime now) {
         SecureRandom random = new SecureRandom();
         String randomStr = String.format("%03d", random.nextInt(1000));
-        return StaticValues.Prefix.MEMBER_ID_PREFIX + DateTimeUtils.convertDateTimeToString(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS, now) + randomStr;
+        return StaticValues.Prefix.MEMBER_ID_PREFIX + DateTimeUtil.convertDateTimeToString(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS, now) + randomStr;
     }
 
     /**

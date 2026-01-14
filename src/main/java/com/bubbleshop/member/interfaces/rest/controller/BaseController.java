@@ -2,17 +2,14 @@ package com.bubbleshop.member.interfaces.rest.controller;
 
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.constants.StaticValues;
-import com.bubbleshop.constants.StaticValues.Token;
+import com.bubbleshop.util.EncodeUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpRequest;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.bubbleshop.constants.StaticValues.Token.*;
@@ -22,7 +19,7 @@ public class BaseController {
     public HttpHeaders getSuccessHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.add(StaticValues.RESULT_CODE, ResponseCode.SUCCESS.getResponseCode());
-        headers.add(StaticValues.RESULT_MESSAGE, URLEncoder.encode(ResponseCode.SUCCESS.getMessage(), StandardCharsets.UTF_8));
+        headers.add(StaticValues.RESULT_MESSAGE, EncodeUtil.encodeStringWithUTF8(ResponseCode.SUCCESS.getMessage()));
         return headers;
     }
 
