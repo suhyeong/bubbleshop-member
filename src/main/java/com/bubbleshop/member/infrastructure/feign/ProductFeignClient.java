@@ -1,6 +1,6 @@
 package com.bubbleshop.member.infrastructure.feign;
 
-import com.bubbleshop.config.ProductClientConfig;
+import com.bubbleshop.member.infrastructure.feign.config.ProductClientConfig;
 import com.bubbleshop.member.infrastructure.dto.GetProductDetailRspDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

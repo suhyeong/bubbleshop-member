@@ -1,6 +1,7 @@
 package com.bubbleshop.exception;
 
 import com.bubbleshop.constants.ResponseCode;
+import com.bubbleshop.util.EncodeUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,8 +17,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import jakarta.validation.ConstraintViolationException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.bubbleshop.constants.StaticValues.RESULT_CODE;
@@ -30,21 +29,21 @@ public class ExceptionResponseHandler extends ResponseEntityExceptionHandler {
     private HttpHeaders getErrorHeader(ResponseCode responseCode, String customMessage) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(RESULT_CODE, responseCode.getResponseCode());
-        headers.add(RESULT_MESSAGE, URLEncoder.encode(StringUtils.defaultIfBlank(customMessage, responseCode.getMessage()), StandardCharsets.UTF_8));
+        headers.add(RESULT_MESSAGE, EncodeUtil.encodeStringWithUTF8(StringUtils.defaultIfBlank(customMessage, responseCode.getMessage())));
         return headers;
     }
 
     private HttpHeaders getErrorHeader(String resultCode, String resultMessage) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(RESULT_CODE, resultCode);
-        headers.add(RESULT_MESSAGE, URLEncoder.encode(resultMessage, StandardCharsets.UTF_8));
+        headers.add(RESULT_MESSAGE, EncodeUtil.encodeStringWithUTF8(resultMessage));
         return headers;
     }
 
     private HttpHeaders getErrorHeader(ResponseCode responseCode) {
         HttpHeaders headers = new HttpHeaders();
         headers.add(RESULT_CODE, responseCode.getResponseCode());
-        headers.add(RESULT_MESSAGE, URLEncoder.encode(responseCode.getMessage(), StandardCharsets.UTF_8));
+        headers.add(RESULT_MESSAGE, EncodeUtil.encodeStringWithUTF8(responseCode.getMessage()));
         return headers;
     }
 
@@ -104,7 +103,7 @@ public class ExceptionResponseHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Void> handler(Exception exception) {
         log.error("Exception error : ", exception);
-        return new ResponseEntity<>(null, getErrorHeader(ResponseCode.SERVER_ERROR), ResponseCode.SERVER_ERROR.getStatus());
+        return new ResponseEntity<>(getErrorHeader(ResponseCode.SERVER_ERROR), ResponseCode.SERVER_ERROR.getStatus());
     }
 
 }

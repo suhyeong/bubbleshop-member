@@ -1,12 +1,23 @@
 package com.bubbleshop.util;
 
+import com.bubbleshop.constants.ResponseCode;
+import com.bubbleshop.exception.ApiException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.io.CharStreams;
 import feign.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 
+@Slf4j
 public class FeignClientUtil {
 
     /**
@@ -33,5 +44,18 @@ public class FeignClientUtil {
 
     public static int getResponseStatus(Response response) {
         return response.status();
+    }
+
+    public static <T> T getResponseBody(Response response, Class<T> mappingClass) {
+        if(response.body().length() == 0)
+            return null;
+
+        try (InputStream bodyIs = response.body().asInputStream()) {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(bodyIs, mappingClass);
+        } catch (Exception e) {
+            log.error("FeignClient ResponseBody Mapper 오류 발생, ", e);
+            throw new ApiException(ResponseCode.SERVER_ERROR);
+        }
     }
 }

@@ -7,7 +7,7 @@ import com.bubbleshop.member.domain.constant.HistoryType;
 import com.bubbleshop.member.domain.model.converter.CommentTypeConverter;
 import com.bubbleshop.member.domain.model.entity.CommentHistory;
 import com.bubbleshop.member.domain.model.entity.TimeEntity;
-import com.bubbleshop.util.DateTimeUtils;
+import com.bubbleshop.util.DateTimeUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jdk.jfr.Description;
@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bubbleshop.util.DateTimeUtils.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS;
+import static com.bubbleshop.util.DateTimeUtil.DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS;
 
 @Entity
 @Table(name = "comment_master")
@@ -58,7 +58,7 @@ public class Comment extends TimeEntity {
     private List<CommentHistory> histories = new ArrayList<>();
 
     public Comment(CreateCommentCommand command) {
-        this.commentNo = StaticValues.Prefix.COMMENT_NO_PREFIX + DateTimeUtils.convertDateTimeToString(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS, LocalDateTime.now());
+        this.commentNo = StaticValues.Prefix.COMMENT_NO_PREFIX + DateTimeUtil.convertDateTimeToString(DATE_FORMAT_YYYY_MM_DD_HH_MM_SS_SSS, LocalDateTime.now());
         this.commentType = CommentType.find(command.getCommentType());
         this.targetNo = command.getTargetNo();
         this.commentContent = command.getContent();

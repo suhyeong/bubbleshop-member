@@ -17,7 +17,6 @@ public class GetMemberRspDTO implements Serializable {
 
     private String id;
     private String name;
-    private String nickname;
     private String phoneNum;
     private String joinDate;
     private String withdrawalDate;

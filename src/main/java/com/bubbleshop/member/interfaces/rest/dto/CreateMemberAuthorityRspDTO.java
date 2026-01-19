@@ -10,8 +10,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @ToString
-public class LoginMemberRspDTO implements Serializable {
+public class CreateMemberAuthorityRspDTO implements Serializable {
     @Serial
-    private static final long serialVersionUID = 7295026743755137157L;
-    private String accessToken;
+    private static final long serialVersionUID = -4951310827441913113L;
+    private Boolean isNewMember;
 }
