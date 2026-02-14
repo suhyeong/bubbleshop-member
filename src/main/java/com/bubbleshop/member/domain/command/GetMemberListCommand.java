@@ -16,8 +16,8 @@ public class GetMemberListCommand {
     private Pageable pageable;
 
     private String memberId;
-    private String memberNickname;
-    private boolean isNameContains;
+    private String memberEmail;
+    private boolean isEmailContains;
     private LocalDateTime joinStartDate;
     private LocalDateTime joinEndDate;
 }

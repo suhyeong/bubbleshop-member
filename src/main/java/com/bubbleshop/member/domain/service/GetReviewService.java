@@ -40,12 +40,12 @@ public class GetReviewService {
     }
 
     public ReviewView getProductDetailInfoByReview(Review review) {
-        // 1. 회원 정보 조회
+        // 1. 회원 정보 조회 TODO 코드정리
         Member member = memberRepository.findById(review.getMemberId()).orElseThrow(() -> new ApiException(ResponseCode.NON_EXIST_DATA));
         // 2. 리뷰의 상품 정보 조회
         Map<String, ProductView> productInfo = productRepository.getProductList(List.of(review.getProductCode()));
         // 3. 리뷰의 댓글 리스트 조회
         List<Comment> comments = commentRepository.findCommentsByTargetNoAndCommentType(review.getReviewNo(), CommentType.REVIEW);
-        return new ReviewView(review, member, productInfo.get(review.getProductCode()), comments, imageUrl);
+        return new ReviewView(review, productInfo.get(review.getProductCode()), comments, imageUrl);
     }
 }

@@ -25,6 +25,7 @@ public class MemberQueryService {
     public MemberListView getMemberList(GetMemberListCommand command) {
         long count = memberRepository.countMemberListWithPagination(command);
         List<MemberView> memberList = memberRepository.findMemberListWithPagination(command);
+        // TODO 응답값 회원명/회원 전화번호 마스킹처리
         return new MemberListView(count, memberList);
     }
 

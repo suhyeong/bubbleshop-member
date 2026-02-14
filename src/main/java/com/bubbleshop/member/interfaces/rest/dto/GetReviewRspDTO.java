@@ -20,7 +20,6 @@ public class GetReviewRspDTO implements Serializable {
 
     private String reviewNo;
     private String memberId;
-    private String memberName;
     private String productCode;
     private String productName;
     private int productScore;

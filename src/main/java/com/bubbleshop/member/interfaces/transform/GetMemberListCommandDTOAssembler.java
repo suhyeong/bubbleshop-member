@@ -23,18 +23,18 @@ public abstract class GetMemberListCommandDTOAssembler {
 
     @Mappings({
             @Mapping(target = "pageable", ignore = true),
-            @Mapping(target = "isNameContains", source = "isMemberNicknameContains"),
+            @Mapping(target = "isEmailContains", source = "isMemberEmailContains"),
             @Mapping(target = "joinStartDate", ignore = true),
             @Mapping(target = "joinEndDate", ignore = true)
     })
     public abstract GetMemberListCommand toCommand(Integer page, Integer size,
-                                                   String memberId, String memberNickname, boolean isMemberNicknameContains,
+                                                   String memberId, String memberEmail, boolean isMemberEmailContains,
                                                    String joinStartDate, String joinEndDate);
 
     @AfterMapping
     protected void afterMappingToCommand(@MappingTarget GetMemberListCommand.GetMemberListCommandBuilder builder,
                                          Integer page, Integer size,
-                                         String memberId, String memberNickname, boolean isMemberNicknameContains,
+                                         String memberId, String memberEmail, boolean isMemberEmailContains,
                                          String joinStartDate, String joinEndDate) {
         builder.pageable(PageRequest.of(page-1, size));
         builder.joinStartDate(DateTimeUtil.convertStringToDateTime(DATE_FORMAT_YYYY_MM_DD_DASH, joinStartDate, LocalTime.MIN));
