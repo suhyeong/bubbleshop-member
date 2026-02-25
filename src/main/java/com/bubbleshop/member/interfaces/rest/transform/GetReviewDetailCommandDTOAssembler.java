@@ -1,4 +1,4 @@
-package com.bubbleshop.member.interfaces.transform;
+package com.bubbleshop.member.interfaces.rest.transform;
 
 import com.bubbleshop.member.domain.model.view.CommentView;
 import com.bubbleshop.member.domain.model.view.ReviewImageView;
