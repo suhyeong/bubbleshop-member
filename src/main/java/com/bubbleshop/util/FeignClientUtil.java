@@ -2,17 +2,14 @@ package com.bubbleshop.util;
 
 import com.bubbleshop.constants.ResponseCode;
 import com.bubbleshop.exception.ApiException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.bubbleshop.member.domain.events.CallExternalInterfaceEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.io.CharStreams;
 import feign.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -57,5 +54,20 @@ public class FeignClientUtil {
             log.error("FeignClient ResponseBody Mapper 오류 발생, ", e);
             throw new ApiException(ResponseCode.SERVER_ERROR);
         }
+    }
+
+    public static CallExternalInterfaceEvent buildRequestEvent(CallExternalInterfaceEvent origin, String requestUrl) {
+        return origin.toBuilder()
+                .requestUrl(requestUrl)
+                .requestDate(LocalDateTime.now())
+                .build();
+    }
+
+    public static CallExternalInterfaceEvent buildResponseEvent(CallExternalInterfaceEvent origin, String... result) {
+        return origin.toBuilder()
+                .responseCode(result[0])
+                .responseMessage(result[1])
+                .responseDate(LocalDateTime.now())
+                .build();
     }
 }

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Logger;
 import feign.QueryMapEncoder;
 import feign.codec.ErrorDecoder;
-import feign.querymap.BeanQueryMapEncoder;
 import io.netty.handler.codec.http.HttpStatusClass;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +38,8 @@ public class NaverClientConfig {
                 NaverRspDTO rspDTO = FeignClientUtil.getResponseBody(response, NaverRspDTO.class);
                 log.error("NaverFeignClient 서버 소통시 에러가 발생했습니다. methodKey : {}, response : {}", methodKey, rspDTO);
                 if(!ObjectUtils.isEmpty(rspDTO)) {
-                    String errorCode = StringUtils.defaultIfBlank(rspDTO.getError(), rspDTO.getResultCode());
-                    errorResponse = NaverResponseCode.find(errorCode);
+                    String errorCode = rspDTO.getErrorCode();
+                    return new ApiException(NaverResponseCode.find(errorCode), errorCode, rspDTO.getErrorMessage());
                 }
             }
 

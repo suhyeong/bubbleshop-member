@@ -1,4 +1,4 @@
-package com.bubbleshop.member.interfaces.transform;
+package com.bubbleshop.member.interfaces.rest.transform;
 
 import com.bubbleshop.member.domain.command.CreateMemberAuthorityCommand;
 import com.bubbleshop.member.domain.constant.MemberProviderType;
@@ -12,7 +12,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR, imports = { MemberProviderType.class })
 public abstract class CreateMemberAuthorityCommandDTOAssembler {
     @Mapping(target="providerType", expression = " java( MemberProviderType.findPath(reqDTO.getProvider()) ) ")
-    public abstract CreateMemberAuthorityCommand toCommand(String requestId, CreateMemberAuthorityReqDTO reqDTO);
+    public abstract CreateMemberAuthorityCommand toCommand(String requestId, String requestIp, CreateMemberAuthorityReqDTO reqDTO);
 
     @Mapping(target = "isNewMember", source = "view.newMember")
     public abstract CreateMemberAuthorityRspDTO toRspDTO(CreateMemberAuthorityView view);

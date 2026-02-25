@@ -11,4 +11,5 @@ public class CreateMemberAuthorityCommand {
     private String code;
     private String state;
     private MemberProviderType providerType;
+    private String requestIp;
 }

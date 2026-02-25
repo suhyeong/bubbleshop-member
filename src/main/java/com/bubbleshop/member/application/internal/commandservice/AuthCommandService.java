@@ -28,6 +28,11 @@ public class AuthCommandService {
         return String.format("%s%s%s", REFRESH_TOKEN_KEY, REDIS_KEY_DIVIDER, userId);
     }
 
+    public void deleteRefreshToken(String userId) {
+        String key = this.getRefreshTokenRedisKey(userId);
+        redisTemplateProvider.deleteRedisValue(key);
+    }
+
     /**
      * 기본 (비회원) 토큰 생성
      *
@@ -48,14 +53,14 @@ public class AuthCommandService {
         TokenView view = tokenProvider.createGuestToken(guestId);
         // save refresh token to redis
         String redisKey = this.getRefreshTokenRedisKey(guestId);
-        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), view.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS); // TODO
+        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), view.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
         return view;
     }
 
     public TokenView createMemberToken(String memberId) {
         TokenView view = tokenProvider.createMemberToken(memberId);
         String redisKey = this.getRefreshTokenRedisKey(memberId);
-        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), view.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS); // TODO
+        redisTemplateProvider.setRedisValue(redisKey, view.getRefreshToken(), view.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
         return view;
     }
 
