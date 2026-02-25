@@ -49,7 +49,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: member
     password: welcome
-    url: jdbc:mysql://localhost:3307/member
+    url: jdbc:mysql://localhost:3306/member
   jpa:
     hibernate:
       ddl-auto: none
@@ -68,8 +68,8 @@ server:
 
 jwt:
   secret-key: GfXz4pl0WLO/4Dd9OuqUplp7Gogiz6sGMAvU616OFaflZ83xiE2lYnwrGRPd5N5G # TODO AWS secret manager
-  expiration-time: 60000           # 15분 (15 * 60 * 1000 = 900000) 테스트용 1분
-  refresh-expiration-time: 120000 # 3시간: 3 * 60 * 60 * 1000 = 3600000 테스트용 2분
+  expiration-time: 3600000           # 1시간, 15분 (15 * 60 * 1000 = 900000)
+  refresh-expiration-time: 86400000 # 24시간, 3시간 (3 * 60 * 60 * 1000 = 3600000)
 
 image:
   url:
@@ -110,7 +110,7 @@ host:
 jwt:
   secret-key: GfXz4pl0WLO/4Dd9OuqUplp7Gogiz6sGMAvU616OFaflZ83xiE2lYnwrGRPd5N5G # TODO AWS secret manager
   expiration-time: 3600000 # 1시간: 1 * 60 * 60 * 1000 = 3600000
-  refresh-expiration-time: 10800000 # 3시간: 3 * 60 * 60 * 1000 = 3600000
+  refresh-expiration-time: 86400000 # 3시간: 3 * 60 * 60 * 1000 = 3600000
 
 image:
   url:

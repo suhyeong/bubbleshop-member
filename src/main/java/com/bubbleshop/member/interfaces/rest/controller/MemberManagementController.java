@@ -6,7 +6,7 @@ import com.bubbleshop.member.domain.model.aggregate.Member;
 import com.bubbleshop.member.domain.model.view.MemberListView;
 import com.bubbleshop.member.interfaces.rest.dto.GetMemberDetailRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.GetMemberListRspDTO;
-import com.bubbleshop.member.interfaces.transform.GetMemberListCommandDTOAssembler;
+import com.bubbleshop.member.interfaces.rest.transform.GetMemberListCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

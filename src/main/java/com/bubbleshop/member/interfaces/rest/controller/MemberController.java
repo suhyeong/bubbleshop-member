@@ -1,5 +1,6 @@
 package com.bubbleshop.member.interfaces.rest.controller;
 
+import com.bubbleshop.config.RequestIP;
 import com.bubbleshop.config.jwt.RequestId;
 import com.bubbleshop.config.jwt.TokenView;
 import com.bubbleshop.member.application.internal.commandservice.MemberCommandService;
@@ -9,8 +10,8 @@ import com.bubbleshop.member.interfaces.rest.dto.CreateAuthorizePageRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.CreateMemberAuthorityReqDTO;
 import com.bubbleshop.member.interfaces.rest.dto.CreateMemberAuthorityRspDTO;
 import com.bubbleshop.member.interfaces.rest.dto.GetAuthorityRoleRspDTO;
-import com.bubbleshop.member.interfaces.transform.CreateAuthorizePageCommandDTOAssembler;
-import com.bubbleshop.member.interfaces.transform.CreateMemberAuthorityCommandDTOAssembler;
+import com.bubbleshop.member.interfaces.rest.transform.CreateAuthorizePageCommandDTOAssembler;
+import com.bubbleshop.member.interfaces.rest.transform.CreateMemberAuthorityCommandDTOAssembler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,8 +49,8 @@ public class MemberController extends BaseController {
 
     @Operation(summary = "회원 회원가입/로그인 API", description = "회원의 회원가입/로그인을 수행한다.")
     @PostMapping(value = AUTH)
-    public ResponseEntity<CreateMemberAuthorityRspDTO> createMemberAuthority(@RequestId String requestId, HttpServletResponse response, @RequestBody @Valid CreateMemberAuthorityReqDTO createMemberAuthorityReqDTO) {
-        CreateMemberAuthorityView view = memberCommandService.createMemberAuthority(createMemberAuthorityCommandDTOAssembler.toCommand(requestId, createMemberAuthorityReqDTO));
+    public ResponseEntity<CreateMemberAuthorityRspDTO> createMemberAuthority(@RequestId String requestId, @RequestIP String requestIP, HttpServletResponse response, @RequestBody @Valid CreateMemberAuthorityReqDTO createMemberAuthorityReqDTO) {
+        CreateMemberAuthorityView view = memberCommandService.createMemberAuthority(createMemberAuthorityCommandDTOAssembler.toCommand(requestId, requestIP, createMemberAuthorityReqDTO));
         setTokenToCookie(response, ACCESS_TOKEN, view.getAccessToken(), view.getAccessTokenExpirationTime());
         setTokenToCookie(response, REFRESH_TOKEN, view.getRefreshToken(), view.getRefreshTokenExpirationTime());
         CreateMemberAuthorityRspDTO responseBody = createMemberAuthorityCommandDTOAssembler.toRspDTO(view);
@@ -58,8 +59,8 @@ public class MemberController extends BaseController {
 
     @Operation(summary = "회원 로그아웃 API", description = "회원의 로그아웃을 수행한다.")
     @DeleteMapping(value = AUTH)
-    public ResponseEntity<Void> deleteMemberAuthority(HttpServletResponse response) {
-        TokenView view = memberCommandService.deleteMemberAuthority();
+    public ResponseEntity<Void> deleteMemberAuthority(@RequestId String requestId, HttpServletResponse response) {
+        TokenView view = memberCommandService.deleteMemberAuthority(requestId);
         setTokenToCookie(response, ACCESS_TOKEN, view.getAccessToken(), view.getAccessTokenExpirationTime());
         setTokenToCookie(response, REFRESH_TOKEN, view.getRefreshToken(), view.getRefreshTokenExpirationTime());
         return ResponseEntity.ok().headers(getSuccessHeaders()).build();
